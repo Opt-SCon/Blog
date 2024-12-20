@@ -3,7 +3,7 @@ import dataManager from './api.js';
 // 渲染文章列表
 async function renderArticles(articles) {
     const articlesList = document.getElementById('articlesList');
-    
+
     if (!articles.length) {
         articlesList.innerHTML = `
             <div class="empty-state">
@@ -44,7 +44,7 @@ let searchTimeout;
 function initSearchHandler() {
     document.getElementById('searchInput').addEventListener('input', async (e) => {
         const searchTerm = e.target.value.toLowerCase();
-        
+
         // 防抖处理
         clearTimeout(searchTimeout);
         searchTimeout = setTimeout(async () => {
@@ -59,20 +59,30 @@ function handleScroll() {
     const cards = document.querySelectorAll('.article-card');
     const search = document.querySelector('.search');
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    
+
     // 控制搜索框样式
     if (scrollTop > window.innerHeight * 0.5) {
         search.classList.add('scrolled');
     } else {
         search.classList.remove('scrolled');
     }
-    
+
+    // 优化文章卡片动画
     cards.forEach(card => {
         const cardTop = card.getBoundingClientRect().top;
         const windowHeight = window.innerHeight;
-        
-        if (cardTop < windowHeight * 0.85) {
-            card.style.animation = 'fadeInUp 0.8s ease forwards';
+
+        // 当卡片进入视口时添加动画
+        if (cardTop < windowHeight * 0.85 && cardTop > -card.offsetHeight) {
+            if (!card.classList.contains('animated')) {
+                card.classList.add('animated');
+                card.style.animation = 'fadeInUp 0.8s ease forwards';
+            }
+        } else {
+            // 当卡片离开视口时移除动画类，以便再次进入时重新触发动画
+            card.classList.remove('animated');
+            card.style.animation = 'none';
+            card.style.opacity = '0';
         }
     });
 }
@@ -93,6 +103,8 @@ async function init() {
         initSearchHandler();
         initScrollHint();
         window.addEventListener('scroll', handleScroll);
+        // 初始触发一次滚动检查
+        handleScroll();
     } catch (error) {
         console.error('Failed to initialize homepage:', error);
         document.getElementById('articlesList').innerHTML = `
