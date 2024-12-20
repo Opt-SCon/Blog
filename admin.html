@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>博客管理后台</title>
+    <link rel="stylesheet" href="assets/css/common.css">
+    <link rel="stylesheet" href="assets/css/admin.css">
+</head>
+<body>
+    <div class="admin-container">
+        <aside class="admin-sidebar">
+            <div class="admin-logo">
+                <h2>博客管理</h2>
+            </div>
+            <ul class="admin-menu">
+                <li class="menu-item active" data-target="dashboard">
+                    <span>📊</span>
+                    <span>数据概览</span>
+                </li>
+                <li class="menu-item" data-target="articles">
+                    <span>📝</span>
+                    <span>文章管理</span>
+                </li>
+                <li class="menu-item" data-target="comments">
+                    <span>💬</span>
+                    <span>评论管理</span>
+                </li>
+                <li class="menu-item" onclick="location.href='index.html'">
+                    <span>🏠</span>
+                    <span>返回首页</span>
+                </li>
+            </ul>
+        </aside>
+
+        <main class="admin-main">
+            <!-- 数据概览 -->
+            <section id="dashboard" class="admin-section">
+                <div class="admin-header">
+                    <h2 class="admin-title">数据概览</h2>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalArticles">0</div>
+                        <div class="stat-label">文章总数</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalComments">0</div>
+                        <div class="stat-label">评论总数</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalLikes">0</div>
+                        <div class="stat-label">获赞总数</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 文章管理 -->
+            <section id="articles" class="admin-section" style="display: none;">
+                <div class="admin-header">
+                    <h2 class="admin-title">文章管理</h2>
+                    <button class="btn btn-primary" onclick="location.href='editor.html'">写文章</button>
+                </div>
+                <div class="articles-table">
+                    <div class="table-header">
+                        <div>标题</div>
+                        <div>分类</div>
+                        <div>发布日期</div>
+                        <div>数据</div>
+                        <div>操作</div>
+                    </div>
+                    <div id="articlesList">
+                        <!-- 文章列表将通过 JavaScript 动态加载 -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- 评论管理 -->
+            <section id="comments" class="admin-section" style="display: none;">
+                <div class="admin-header">
+                    <h2 class="admin-title">评论管理</h2>
+                </div>
+                <div class="comments-table" id="commentsList">
+                    <!-- 评论列表将通过 JavaScript 动态加载 -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="assets/js/common.js"></script>
+    <script src="assets/js/admin.js"></script>
+</body>
+</html> 

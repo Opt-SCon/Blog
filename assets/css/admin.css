@@ -1,0 +1,296 @@
+/* 后台布局 */
+.admin-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* 侧边栏样式 */
+.admin-sidebar {
+    background: #1d1d1f;
+    color: #f5f5f7;
+    padding: 30px 0;
+    position: fixed;
+    width: 240px;
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+.admin-logo {
+    padding: 0 25px;
+    margin-bottom: 40px;
+}
+
+.admin-logo h2 {
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.admin-menu {
+    list-style: none;
+}
+
+.menu-item {
+    padding: 12px 25px;
+    cursor: pointer;
+    transition: background 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #86868b;
+}
+
+.menu-item.active {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+.menu-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+}
+
+/* 主内容区域 */
+.admin-main {
+    flex: 1;
+    margin-left: 240px;
+    padding: 40px;
+    background: #f5f5f7;
+    min-height: 100vh;
+}
+
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.admin-title {
+    font-size: 24px;
+    font-weight: 500;
+    color: #1d1d1f;
+}
+
+/* 数据概览卡片 */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s;
+}
+
+.stat-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #0071e3, #40adff);
+    opacity: 0.8;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+}
+
+.stat-value {
+    font-size: 32px;
+    font-weight: 500;
+    color: #1d1d1f;
+    margin-bottom: 8px;
+}
+
+.stat-label {
+    color: #86868b;
+    font-size: 14px;
+}
+
+/* 文章列表 */
+.articles-table {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.table-header {
+    display: flex;
+    padding: 15px 20px;
+    background: #f5f5f7;
+    font-weight: 500;
+    color: #1d1d1f;
+    border-bottom: 1px solid #e5e5e7;
+}
+
+.table-header > div {
+    flex: 1;
+}
+
+.table-header > div:first-child {
+    flex: 2;
+}
+
+.table-header > div:last-child {
+    flex: 0 0 120px;
+    text-align: right;
+}
+
+.article-row {
+    display: flex;
+    padding: 15px 20px;
+    border-bottom: 1px solid #f5f5f7;
+    align-items: center;
+}
+
+.article-row > div {
+    flex: 1;
+}
+
+.article-row > div:first-child {
+    flex: 2;
+}
+
+.article-row > div:last-child {
+    flex: 0 0 120px;
+    text-align: right;
+}
+
+.article-title {
+    color: #1d1d1f;
+    font-weight: 500;
+}
+
+.article-category {
+    color: #86868b;
+}
+
+.article-date {
+    color: #86868b;
+}
+
+.article-stats {
+    display: flex;
+    gap: 15px;
+    color: #86868b;
+}
+
+.article-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.action-btn {
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.3s;
+}
+
+.btn-edit {
+    background: #f5f5f7;
+    color: #1d1d1f;
+}
+
+.btn-delete {
+    background: #ff3b30;
+    color: white;
+}
+
+/* 评论管理 */
+.comments-table {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.comment-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 20px;
+    border-bottom: 1px solid #f5f5f7;
+    align-items: center;
+}
+
+.comment-content {
+    flex: 1;
+    margin-right: 20px;
+}
+
+.comment-article {
+    font-weight: 500;
+    margin-bottom: 5px;
+    color: #1d1d1f;
+}
+
+.comment-text {
+    color: #515154;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.comment-date {
+    color: #86868b;
+    font-size: 12px;
+    margin-right: 20px;
+    white-space: nowrap;
+}
+
+/* 响应式设计 */
+@media (max-width: 1024px) {
+    .admin-container {
+        flex-direction: column;
+    }
+
+    .admin-sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+    }
+
+    .admin-main {
+        margin-left: 0;
+    }
+
+    .admin-menu {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 0 20px;
+    }
+
+    .menu-item {
+        padding: 8px 16px;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    .article-row,
+    .table-header {
+        font-size: 14px;
+    }
+
+    .article-category,
+    .article-date {
+        display: none;
+    }
+
+    .article-row,
+    .table-header {
+        grid-template-columns: 2fr 1fr auto;
+    }
+} 

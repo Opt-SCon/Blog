@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>关于我</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+
+        .nav {
+            background: rgba(0, 0, 0, 0.8);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            backdrop-filter: saturate(180%) blur(20px);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: 44px;
+            z-index: 999;
+        }
+
+        .nav ul {
+            max-width: 1000px;
+            margin: 0 auto;
+            list-style: none;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            height: 100%;
+            padding: 0 20px;
+            gap: 30px;
+        }
+
+        .nav a {
+            color: #f5f5f7;
+            text-decoration: none;
+            font-size: 12px;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+            letter-spacing: 0.5px;
+        }
+
+        .about-container {
+            max-width: 800px;
+            margin: 84px auto 40px;
+            padding: 0 20px;
+            line-height: 1.8;
+        }
+
+        .about-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .about-header h1 {
+            font-size: 48px;
+            color: #1d1d1f;
+            margin-bottom: 20px;
+        }
+
+        .about-content {
+            color: #333;
+            font-size: 16px;
+        }
+
+        .about-content p {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <ul>
+            <li><a href="index.html">首页</a></li>
+            <li><a href="articles.html">文章</a></li>
+            <li><a href="about.html" class="active">关于</a></li>
+            <li><a href="admin.html">后台管理</a></li>
+        </ul>
+    </nav>
+
+    <div class="about-container">
+        <header class="about-header">
+            <h1>关于我</h1>
+        </header>
+
+        <div class="about-content">
+            <p>欢迎来到我的博客！这里是我分享想法和经验的地方。</p>
+            <p>我热爱技术，喜欢探索��事物，希望通过文字记录下学习和成长的过程。</p>
+            <p>如果你有任何问题或建议，欢迎在文章下方留言交流。</p>
+        </div>
+    </div>
+</body>
+</html> 

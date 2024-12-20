@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的博客 - 简约而不简单</title>
+    <link rel="stylesheet" href="assets/css/common.css">
+    <link rel="stylesheet" href="assets/css/index.css">
+</head>
+
+<body>
+    <nav class="nav">
+        <ul>
+            <li><a href="articles.html">文章</a></li>
+            <li><a href="about.html">关于</a></li>
+            <li><a href="admin.html">后台管理</a></li>
+        </ul>
+    </nav>
+
+    <section class="hero">
+        <h1>探索、创造、分享</h1>
+        <p>记录生活，分享想法</p>
+        <div class="scroll-hint" id="scrollHint">
+            <span>向下滚动查看更多</span>
+            <div class="arrow"></div>
+        </div>
+    </section>
+
+    <div class="search">
+        <input type="text" placeholder="搜索文章..." id="searchInput">
+    </div>
+
+    <section class="articles" id="articlesList">
+        <!-- 文章将通过 JavaScript 动态加载 -->
+    </section>
+
+    <script src="assets/js/common.js"></script>
+    <script src="assets/js/index.js"></script>
+</body>
+
+</html>
