@@ -40,8 +40,11 @@ const API = {
 
 // 工具函数
 const utils = {
+    // 生成唯一ID
     generateId: (items) => Math.max(0, ...items.map(item => item.id)) + 1,
+    // 格式化日期
     formatDate: (date) => new Date(date).toISOString(),
+    // 验证ID是否有效
     isValidId: (id) => !isNaN(parseInt(id)) && id > 0
 };
 
@@ -233,7 +236,7 @@ class DataManager {
         return this.articles.filter(article => {
             const title = article.title.toLowerCase();
             const content = article.content.toLowerCase();
-            return words.every(word => 
+            return words.every(word =>
                 title.includes(word) || content.includes(word)
             );
         });
