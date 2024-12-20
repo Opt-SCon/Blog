@@ -1,0 +1,82 @@
+.editor-container {
+    max-width: 1000px;
+    margin: 84px auto 40px;
+    padding: 0 20px;
+}
+
+.editor-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.editor-form input,
+.editor-form textarea,
+.editor-form select {
+    width: 100%;
+    margin-bottom: 20px;
+    padding: 12px;
+    border: 1px solid #d2d2d7;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: all 0.3s;
+}
+
+.editor-form input:focus,
+.editor-form textarea:focus,
+.editor-form select:focus {
+    outline: none;
+    border-color: #0071e3;
+    box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.1);
+}
+
+.editor-form textarea {
+    min-height: 300px;
+    resize: vertical;
+    font-family: inherit;
+}
+
+.editor-form select {
+    background: white;
+    cursor: pointer;
+}
+
+.preview {
+    padding: 20px;
+    border: 1px solid #d2d2d7;
+    border-radius: 8px;
+    margin-top: 20px;
+    min-height: 200px;
+    background: #f5f5f7;
+}
+
+.btn {
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s;
+}
+
+.btn-primary {
+    background: #0071e3;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #0077ed;
+}
+
+@media (max-width: 768px) {
+    .editor-container {
+        margin-top: 64px;
+    }
+
+    .editor-form input,
+    .editor-form textarea,
+    .editor-form select {
+        font-size: 14px;
+    }
+} 

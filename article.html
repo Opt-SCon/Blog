@@ -4,263 +4,66 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>文章详情</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif;
-        }
-
-        .nav {
-            background: rgba(0, 0, 0, 0.8);
-            -webkit-backdrop-filter: saturate(180%) blur(20px);
-            backdrop-filter: saturate(180%) blur(20px);
-            position: fixed;
-            top: 0;
-            width: 100%;
-            height: 44px;
-            z-index: 999;
-        }
-
-        .nav ul {
-            max-width: 1000px;
-            margin: 0 auto;
-            list-style: none;
-            display: flex;
-            align-items: center;
-            height: 100%;
-            padding: 0 20px;
-        }
-
-        .nav a {
-            color: #f5f5f7;
-            text-decoration: none;
-            font-size: 14px;
-            opacity: 0.8;
-            transition: opacity 0.3s;
-        }
-
-        .nav a:hover {
-            opacity: 1;
-        }
-
-        .article-container {
-            max-width: 1200px;
-            margin: 84px auto 40px;
-            padding: 0 20px;
-            display: grid;
-            grid-template-columns: 1fr 300px;
-            gap: 40px;
-        }
-
-        .article-main {
-            background: white;
-            border-radius: 12px;
-            padding: 40px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .article-sidebar {
-            position: sticky;
-            top: 84px;
-            height: fit-content;
-        }
-
-        .article-info {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .info-item {
-            margin-bottom: 15px;
-            color: #86868b;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .category-tag {
-            display: inline-block;
-            padding: 4px 8px;
-            border-radius: 4px;
-            background: #f5f5f7;
-            font-size: 12px;
-            color: #1d1d1f;
-        }
-
-        .comments-section {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .comment-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .comment-actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        .comment-actions button {
-            padding: 4px 8px;
-            border-radius: 4px;
-            border: none;
-            background: #f5f5f7;
-            cursor: pointer;
-            font-size: 12px;
-        }
-
-        .comment-actions button.delete {
-            color: #ff3b30;
-        }
-
-        @media (max-width: 768px) {
-            .article-container {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="assets/css/common.css">
+    <link rel="stylesheet" href="assets/css/article.css">
 </head>
 <body>
     <nav class="nav">
         <ul>
-            <li><a href="index.html">返回首页</a></li>
+            <li><a href="index.html">首页</a></li>
+            <li><a href="articles.html">文章</a></li>
+            <li><a href="admin.html">后台管理</a></li>
         </ul>
     </nav>
 
     <div class="article-container">
         <main class="article-main">
             <article>
-                <header class="article-header">
-                    <h1 class="article-title" id="articleTitle"></h1>
-                </header>
+                <h1 class="article-title" id="articleTitle"></h1>
+                <div class="article-meta">
+                    <span id="articleCategory"></span>
+                    <span id="articleDate"></span>
+                    <span id="articleViews">阅读 0</span>
+                </div>
                 <div class="article-content" id="articleContent"></div>
             </article>
+
+            <section class="comments-section">
+                <h3>评论 <span id="commentCount">0</span></h3>
+                <form class="comment-form" id="commentForm">
+                    <textarea placeholder="写下你的评论..." required></textarea>
+                    <button type="submit" class="btn btn-primary">发表评论</button>
+                </form>
+                <div class="comment-list" id="commentList"></div>
+            </section>
         </main>
 
         <aside class="article-sidebar">
             <div class="article-info">
                 <div class="info-item">
-                    <span>📅 发布时间：</span>
-                    <span id="articleDate"></span>
+                    <span class="info-label">分类</span>
+                    <span class="category-tag" id="categoryTag"></span>
                 </div>
                 <div class="info-item">
-                    <span>📂 分类：</span>
-                    <span class="category-tag" id="articleCategory"></span>
+                    <span class="info-label">发布时间</span>
+                    <span class="info-value" id="publishDate"></span>
                 </div>
                 <div class="info-item">
-                    <span>👍 点赞：</span>
-                    <span id="articleLikes">0</span>
-                </div>
-                <div class="info-item">
-                    <span>💬 评论：</span>
-                    <span id="articleComments">0</span>
+                    <span class="info-label">阅读数</span>
+                    <span class="info-value" id="viewCount">0</span>
                 </div>
                 <button class="btn-like" id="likeBtn">
                     <span>👍</span>
-                    <span>点赞</span>
+                    <span id="likeCount">0</span>
                 </button>
             </div>
 
-            <div class="comments-section">
-                <div class="comment-header">
-                    <h3>评论</h3>
-                </div>
-                <form class="comment-form" id="commentForm">
-                    <textarea placeholder="写下你的评论..." required></textarea>
-                    <button type="submit">发表评论</button>
-                </form>
-                <div class="comment-list" id="commentList"></div>
+            <div class="article-actions">
+                <button class="btn btn-back" onclick="window.history.back()">返回</button>
             </div>
         </aside>
     </div>
 
-    <script>
-        // 获取文章数据
-        const articles = JSON.parse(localStorage.getItem('articles')) || [];
-        const urlParams = new URLSearchParams(window.location.search);
-        const articleId = parseInt(urlParams.get('id'));
-        const article = articles[articleId];
-
-        if (!article) {
-            window.location.href = 'index.html';
-        }
-
-        // 渲染文章内容
-        document.getElementById('articleTitle').textContent = article.title;
-        document.getElementById('articleDate').textContent = new Date(article.date).toLocaleDateString();
-        document.getElementById('articleLikes').textContent = `👍 ${article.likes || 0}`;
-        document.getElementById('articleComments').textContent = `💬 ${article.comments?.length || 0}`;
-        document.getElementById('articleContent').innerHTML = article.content.split('\n').map(para => `<p>${para}</p>`).join('');
-
-        // 点赞功能
-        document.getElementById('likeBtn').addEventListener('click', () => {
-            article.likes = (article.likes || 0) + 1;
-            localStorage.setItem('articles', JSON.stringify(articles));
-            document.getElementById('articleLikes').textContent = `👍 ${article.likes}`;
-        });
-
-        // 评论功能
-        document.getElementById('commentForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const content = e.target.querySelector('textarea').value.trim();
-            if (!content) return;
-
-            const comment = {
-                content,
-                date: new Date().toISOString()
-            };
-
-            article.comments = article.comments || [];
-            article.comments.push(comment);
-            localStorage.setItem('articles', JSON.stringify(articles));
-            
-            renderComments();
-            e.target.reset();
-        });
-
-        // 渲染评论列表
-        function renderComments() {
-            const commentList = document.getElementById('commentList');
-            commentList.innerHTML = (article.comments || []).map((comment, index) => `
-                <div class="comment-item">
-                    <div class="comment-content">${comment.content}</div>
-                    <div class="comment-meta">
-                        <span>${new Date(comment.date).toLocaleString()}</span>
-                        <div class="comment-actions">
-                            <button onclick="deleteComment(${index})" class="delete">删除</button>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-            document.getElementById('articleComments').textContent = article.comments.length;
-        }
-
-        // 添加删除评论功能
-        function deleteComment(index) {
-            if (confirm('确定要删除这条评论吗？')) {
-                article.comments.splice(index, 1);
-                localStorage.setItem('articles', JSON.stringify(articles));
-                renderComments();
-            }
-        }
-
-        // 更新文章信息显示
-        document.getElementById('articleCategory').textContent = article.category || '未分类';
-
-        // 初始化渲染评论
-        renderComments();
-    </script>
+    <script type="module" src="assets/js/article.js"></script>
 </body>
 </html> 

@@ -1,4 +1,4 @@
-/* 全局样式 */
+/* 基础样式 */
 * {
     margin: 0;
     padding: 0;
@@ -6,7 +6,13 @@
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
-/* 导航栏样式 */
+body {
+    line-height: 1.6;
+    color: #1d1d1f;
+    background: #f5f5f7;
+}
+
+/* 导航栏 */
 .nav {
     background: rgba(0, 0, 0, 0.8);
     -webkit-backdrop-filter: saturate(180%) blur(20px);
@@ -15,11 +21,11 @@
     top: 0;
     width: 100%;
     height: 44px;
-    z-index: 999;
+    z-index: 1000;
 }
 
 .nav ul {
-    max-width: 1000px;
+    max-width: 1200px;
     margin: 0 auto;
     list-style: none;
     display: flex;
@@ -49,7 +55,7 @@
     color: #fff;
 }
 
-/* 通用按钮样式 */
+/* 按钮样式 */
 .btn {
     padding: 8px 16px;
     border-radius: 8px;
@@ -64,6 +70,10 @@
     color: white;
 }
 
+.btn-primary:hover {
+    background: #0077ed;
+}
+
 .btn-secondary {
     background: #f5f5f7;
     color: #1d1d1f;
@@ -75,4 +85,57 @@
     border-radius: 12px;
     padding: 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 错误消息 */
+.error-message {
+    text-align: center;
+    padding: 40px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.error-message h3 {
+    color: #1d1d1f;
+    margin-bottom: 10px;
+}
+
+.error-message p {
+    color: #86868b;
+    margin-bottom: 20px;
+}
+
+/* 加载动画 */
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .nav {
+        padding: 10px 0;
+    }
+
+    .nav ul {
+        padding: 0 15px;
+        gap: 20px;
+    }
+
+    .nav a {
+        font-size: 14px;
+    }
 } 
