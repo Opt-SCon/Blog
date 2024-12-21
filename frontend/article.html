@@ -1,69 +1,96 @@
+<!--
+文章详情页
+展示单篇文章的完整内容，包括文章信息、评论系统和交互功能
+-->
 <!DOCTYPE html>
 <html lang="zh">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- 响应式设计视口设置 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>文章详情</title>
-    <link rel="stylesheet" href="assets/css/common.css">
-    <link rel="stylesheet" href="assets/css/article.css">
-</head>
-<body>
+    <!-- 引入样式文件 -->
+    <link rel="stylesheet" href="assets/css/common.css" />
+    <!-- 公共样式 -->
+    <link rel="stylesheet" href="assets/css/article.css" />
+    <!-- 文章页特定样式 -->
+  </head>
+  <body>
+    <!-- 顶部导航栏 -->
     <nav class="nav">
-        <ul>
-            <li><a href="index.html">首页</a></li>
-            <li><a href="articles.html">文章</a></li>
-            <li><a href="admin.html">后台管理</a></li>
-        </ul>
+      <ul>
+        <li><a href="index.html">首页</a></li>
+        <li><a href="articles.html">文章</a></li>
+        <li><a href="admin.html">后台管理</a></li>
+      </ul>
     </nav>
 
+    <!-- 文章页面主容器：采用左右布局 -->
     <div class="article-container">
-        <main class="article-main">
-            <article>
-                <h1 class="article-title" id="articleTitle"></h1>
-                <div class="article-meta">
-                    <span id="articleCategory"></span>
-                    <span id="articleDate"></span>
-                    <span id="articleViews">阅读 0</span>
-                </div>
-                <div class="article-content" id="articleContent"></div>
-            </article>
+      <!-- 左侧主要内容区 -->
+      <main class="article-main">
+        <!-- 文章内容区 -->
+        <article>
+          <h1 class="article-title" id="articleTitle"></h1>
+          <!-- 文章元信息：分类、日期、阅读量 -->
+          <div class="article-meta">
+            <span id="articleCategory"></span>
+            <span id="articleDate"></span>
+            <span id="articleViews">阅读 0</span>
+          </div>
+          <!-- 文章正文内容 -->
+          <div class="article-content" id="articleContent"></div>
+        </article>
 
-            <section class="comments-section">
-                <h3>评论 <span id="commentCount">0</span></h3>
-                <form class="comment-form" id="commentForm">
-                    <textarea placeholder="写下你的评论..." required></textarea>
-                    <button type="submit" class="btn btn-primary">发表评论</button>
-                </form>
-                <div class="comment-list" id="commentList"></div>
-            </section>
-        </main>
+        <!-- 评论区域 -->
+        <section class="comments-section">
+          <h3>评论 <span id="commentCount">0</span></h3>
+          <!-- 评论表单 -->
+          <form class="comment-form" id="commentForm">
+            <textarea placeholder="写下你的评论..." required></textarea>
+            <button type="submit" class="btn btn-primary">发表评论</button>
+          </form>
+          <!-- 评论列表容器 -->
+          <div class="comment-list" id="commentList"></div>
+        </section>
+      </main>
 
-        <aside class="article-sidebar">
-            <div class="article-info">
-                <div class="info-item">
-                    <span class="info-label">分类</span>
-                    <span class="category-tag" id="categoryTag"></span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">发布时间</span>
-                    <span class="info-value" id="publishDate"></span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">阅读数</span>
-                    <span class="info-value" id="viewCount">0</span>
-                </div>
-                <button class="btn-like" id="likeBtn">
-                    <span>👍</span>
-                    <span id="likeCount">0</span>
-                </button>
-            </div>
+      <!-- 右侧边栏 -->
+      <aside class="article-sidebar">
+        <!-- 文章信息卡片 -->
+        <div class="article-info">
+          <!-- 分类信息 -->
+          <div class="info-item">
+            <span class="info-label">分类</span>
+            <span class="category-tag" id="categoryTag"></span>
+          </div>
+          <!-- 发布时间 -->
+          <div class="info-item">
+            <span class="info-label">发布时间</span>
+            <span class="info-value" id="publishDate"></span>
+          </div>
+          <!-- 阅读数统计 -->
+          <div class="info-item">
+            <span class="info-label">阅读数</span>
+            <span class="info-value" id="viewCount">0</span>
+          </div>
+          <!-- 点赞按钮 -->
+          <button class="btn-like" id="likeBtn">
+            <span>👍</span>
+            <span id="likeCount">0</span>
+          </button>
+        </div>
 
-            <div class="article-actions">
-                <button class="btn btn-back" onclick="window.history.back()">返回</button>
-            </div>
-        </aside>
+        <!-- 文章操作按钮 -->
+        <div class="article-actions">
+          <button class="btn btn-back" onclick="window.history.back()">
+            返回
+          </button>
+        </div>
+      </aside>
     </div>
 
+    <!-- 引入文章页面脚本 -->
     <script type="module" src="assets/js/article.js"></script>
-</body>
-</html> 
+  </body>
+</html>

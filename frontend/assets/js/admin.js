@@ -1,32 +1,44 @@
+/**
+ * 博客后台管理脚本
+ * 负责后台管理页面的数据展示、文章管理、评论管理等功能
+ * 包括数据统计、列表展示、删除操作等
+ */
+
 import dataManager from './api.js';
 
-// 更新统计数据
+/**
+ * 更新统计数据
+ * 计算并显示文章总数、评论总数和点赞总数
+ */
 async function updateStats() {
-    // 获取文章数据
+    // 获取所有文章数据
     const articles = await dataManager.getArticles();
-    // 获取文章总数
-    const totalArticles = articles.length;
-    // 获取评论总数
-    const totalComments = articles.reduce((sum, article) => sum + (article.comments?.length || 0), 0);
-    // 获取点赞总数
-    const totalLikes = articles.reduce((sum, article) => sum + (article.likes || 0), 0);
 
-    // 更新页面上的统计数据
+    // 计算各项统计数据
+    const totalArticles = articles.length;
+    const totalComments = articles.reduce((sum, article) =>
+        sum + (article.comments?.length || 0), 0);
+    const totalLikes = articles.reduce((sum, article) =>
+        sum + (article.likes || 0), 0);
+
+    // 更新页面上的统计数字
     document.getElementById('totalArticles').textContent = totalArticles;
     document.getElementById('totalComments').textContent = totalComments;
     document.getElementById('totalLikes').textContent = totalLikes;
 }
 
-// 渲染文章列表
+/**
+ * 渲染文章列表
+ * 展示所有文章的标题、分类、发布日期和操作按钮
+ */
 async function renderArticles() {
     // 获取文章数据
     const articles = await dataManager.getArticles();
-    // 获取文章列表容器
     const articlesList = document.getElementById('articlesList');
 
-    // 渲染文章列表
+    // 异步渲染每篇文章的信息
     articlesList.innerHTML = await Promise.all(articles.map(async article => {
-        // 获取文章分类
+        // 获取文章分类信息
         const category = await dataManager.getCategoryById(article.categoryId);
         return `
             <div class="article-row">
@@ -46,14 +58,16 @@ async function renderArticles() {
     })).then(rows => rows.join(''));
 }
 
-// 渲染评论列表
+/**
+ * 渲染评论列表
+ * 展示所有文章的评论，包括评论内容、所属文章和发布时间
+ */
 async function renderComments() {
-    // 获取文章数据
+    // 获取所有文章数据
     const articles = await dataManager.getArticles();
-    // 获取评论列表容器
     const commentsList = document.getElementById('commentsList');
 
-    // 获取所有评论数据
+    // 提取并扁平化所有评论数据，添加文章信息
     const allComments = articles.flatMap(article =>
         (article.comments || []).map(comment => ({
             ...comment,
@@ -79,16 +93,20 @@ async function renderComments() {
     `).join('');
 }
 
-// 删除文章
+/**
+ * 删除文章
+ * 删除指定ID的文章，并更新相关数据显示
+ * 
+ * @param {number} id - 要删除的文章ID
+ */
 async function deleteArticle(id) {
-    // 确认是否删除文章
     if (confirm('确定要删除这篇文章吗？')) {
         try {
-            // 删除文章
+            // 调用API删除文章
             await dataManager.deleteArticle(id);
-            // 更新统计数据
+
+            // 更新页面数据
             await updateStats();
-            // 重新渲染文章列表和评论列表
             await renderArticles();
             await renderComments();
         } catch (error) {
@@ -98,16 +116,21 @@ async function deleteArticle(id) {
     }
 }
 
-// 删除评论
+/**
+ * 删除评论
+ * 删除指定文章下的指定评论
+ * 
+ * @param {number} articleId - 文章ID
+ * @param {number} commentId - 评论ID
+ */
 async function deleteComment(articleId, commentId) {
-    // 确认是否删除评论
     if (confirm('确定要删除这条评论吗？')) {
         try {
-            // 删除评论
+            // 调用API删除评论
             await dataManager.deleteComment(articleId, commentId);
-            // 更新统计数据
+
+            // 更新页面数据
             await updateStats();
-            // 重新渲染评论列表
             await renderComments();
         } catch (error) {
             console.error('Failed to delete comment:', error);
@@ -116,18 +139,21 @@ async function deleteComment(articleId, commentId) {
     }
 }
 
-// 初始化菜单切换
+/**
+ * 初始化菜单切换功能
+ * 处理左侧菜单的点击事件和页面切换
+ */
 function initMenuHandlers() {
-    // 获取菜单项
     document.querySelectorAll('.menu-item').forEach(item => {
         item.addEventListener('click', () => {
             if (item.dataset.target) {
-                // 切换菜单项
-                document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+                // 切换菜单项的激活状态
+                document.querySelectorAll('.menu-item').forEach(i =>
+                    i.classList.remove('active'));
                 item.classList.add('active');
 
+                // 切换对应内容区域的显示状态
                 document.querySelectorAll('.admin-section').forEach(section => {
-                    // 切换显示的页面
                     section.style.display = section.id === item.dataset.target ? 'block' : 'none';
                 });
             }
@@ -135,18 +161,21 @@ function initMenuHandlers() {
     });
 }
 
-// 初始化
+/**
+ * 页面初始化
+ * 加载初始数据并设置事件处理程序
+ */
 async function init() {
     try {
+        // 初始化各项数据
         await updateStats();
-        // 更新统计数据
         await renderArticles();
-        // 渲染文章列表和评论列表
         await renderComments();
-        initMenuHandlers();
-        // 初始化菜单切换
 
-        // 将删除方法添加到全局作用域
+        // 初始化菜单处理
+        initMenuHandlers();
+
+        // 将删除方法添加到全局作用域（供HTML onclick使用）
         window.deleteArticle = deleteArticle;
         window.deleteComment = deleteComment;
     } catch (error) {

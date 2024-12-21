@@ -1,39 +1,59 @@
+<!--
+文章编辑器页面
+提供文章的创建和编辑功能，包括标题、分类和内容的编辑
+支持实时预览功能
+-->
 <!DOCTYPE html>
 <html lang="zh">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- 响应式设计视口设置 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>文章编辑 - 博客管理</title>
-    <link rel="stylesheet" href="assets/css/common.css">
-    <link rel="stylesheet" href="assets/css/editor.css">
-</head>
+    <!-- 引入样式文件 -->
+    <link rel="stylesheet" href="assets/css/common.css" />
+    <!-- 公共样式 -->
+    <link rel="stylesheet" href="assets/css/editor.css" />
+    <!-- 编辑器特定样式 -->
+  </head>
 
-<body>
+  <body>
+    <!-- 顶部导航栏 -->
     <nav class="nav">
-        <ul>
-            <li><a href="admin.html">返回管理</a></li>
-            <li><a href="index.html">返回首页</a></li>
-        </ul>
+      <ul>
+        <li><a href="admin.html">返回管理</a></li>
+        <li><a href="index.html">返回首页</a></li>
+      </ul>
     </nav>
 
+    <!-- 编辑器主容器 -->
     <div class="editor-container">
-        <div class="editor-header">
-            <h2>编辑文章</h2>
-            <button class="btn btn-primary" id="publishBtn">发布</button>
-        </div>
+      <!-- 编辑器头部：标题和发布按钮 -->
+      <div class="editor-header">
+        <h2>编辑文章</h2>
+        <button class="btn btn-primary" id="publishBtn">发布</button>
+      </div>
 
-        <form class="editor-form" id="articleForm">
-            <input type="text" id="title" placeholder="文章标题" required>
-            <select id="category" required aria-label="文章分类">
-                <option value="">选择分类</option>
-            </select>
-            <textarea id="content" placeholder="开始写作..." required></textarea>
-            <div class="preview" id="preview"></div>
-        </form>
+      <!-- 文章编辑表单 -->
+      <form class="editor-form" id="articleForm">
+        <!-- 文章标题输入框 -->
+        <input type="text" id="title" placeholder="文章标题" required />
+
+        <!-- 文章分类选择器 -->
+        <select id="category" required aria-label="文章分类">
+          <option value="">选择分类</option>
+          <!-- 分类选项将通过JavaScript动态加载 -->
+        </select>
+
+        <!-- 文章内容编辑区 -->
+        <textarea id="content" placeholder="开始写作..." required></textarea>
+
+        <!-- 实时预览区域 -->
+        <div class="preview" id="preview"></div>
+      </form>
     </div>
 
+    <!-- 引入编辑器脚本 -->
     <script type="module" src="assets/js/editor.js"></script>
-</body>
-
+  </body>
 </html>

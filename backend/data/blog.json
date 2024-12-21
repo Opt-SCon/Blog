@@ -6,8 +6,8 @@
       "categoryId": 1,
       "id": 4,
       "date": "2024-12-21T19:54:17.622986",
-      "likes": 2,
-      "views": 127,
+      "likes": 14,
+      "views": 129,
       "comments": [],
       "formatted_date": "2024-12-21 19:54:17"
     },
@@ -17,8 +17,8 @@
       "content": "这是一个基于 Flask 和原生 JavaScript 开发的个人博客系统。\n\n## 主要功能\n\n1. 文章管理\n2. 评论系统\n3. 分类管理\n4. 数据统计\n\n## 技术特点\n\n- 前后端分离\n- RESTful API\n- JSON 数据存储\n- 响应式设计",
       "categoryId": 1,
       "date": "2024-01-01T12:00:00.000Z",
-      "likes": 12,
-      "views": 105,
+      "likes": 18,
+      "views": 107,
       "comments": [
         {
           "id": 1,
@@ -36,7 +36,7 @@
       "categoryId": 1,
       "date": "2024-01-03T15:00:00.000Z",
       "likes": 3,
-      "views": 36,
+      "views": 37,
       "comments": [],
       "formatted_date": "2024-01-03 15:00:00"
     },
@@ -46,8 +46,8 @@
       "content": "新的一年，新的开始。\n\n## 学习计划\n\n1. 深入学习 Python\n2. 掌握前端框架\n3. 了解云计算技术\n\n## 生活计划\n\n1. 坚持运动\n2. 多读书\n3. 规律作息",
       "categoryId": 2,
       "date": "2024-01-05T10:00:00.000Z",
-      "likes": 7,
-      "views": 30,
+      "likes": 9,
+      "views": 31,
       "comments": [
         {
           "id": 1,

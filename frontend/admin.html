@@ -1,88 +1,121 @@
+<!--
+博客后台管理页面
+提供博客的管理功能，包括数据概览、文章管理和评论管理
+采用左侧菜单 + 右侧内容的经典后台布局
+-->
 <!DOCTYPE html>
 <html lang="zh">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- 响应式设计视口设置 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>博客管理后台</title>
-    <link rel="stylesheet" href="assets/css/common.css">
-    <link rel="stylesheet" href="assets/css/admin.css">
-</head>
-<body>
+    <!-- 引入样式文件 -->
+    <link rel="stylesheet" href="assets/css/common.css" />
+    <!-- 公共样式 -->
+    <link rel="stylesheet" href="assets/css/admin.css" />
+    <!-- 后台特定样式 -->
+  </head>
+  <body>
+    <!-- 后台主容器：采用左侧菜单 + 右侧内容的布局 -->
     <div class="admin-container">
-        <aside class="admin-sidebar">
-            <div class="admin-logo">
-                <h2>博客管理</h2>
+      <!-- 左侧菜单栏 -->
+      <aside class="admin-sidebar">
+        <!-- 后台标题 -->
+        <div class="admin-logo">
+          <h2>博客管理</h2>
+        </div>
+        <!-- 菜单列表 -->
+        <ul class="admin-menu">
+          <!-- 数据概览菜单项 -->
+          <li class="menu-item active" data-target="dashboard">
+            <span>📊</span>
+            <span>数据概览</span>
+          </li>
+          <!-- 文章管理菜单项 -->
+          <li class="menu-item" data-target="articles">
+            <span>📝</span>
+            <span>文章管理</span>
+          </li>
+          <!-- 评论管理菜单项 -->
+          <li class="menu-item" data-target="comments">
+            <span>💬</span>
+            <span>评论管理</span>
+          </li>
+          <!-- 返回首页链接 -->
+          <li class="menu-item" onclick="location.href='index.html'">
+            <span>🏠</span>
+            <span>返回首页</span>
+          </li>
+        </ul>
+      </aside>
+
+      <!-- 右侧内容区域 -->
+      <main class="admin-main">
+        <!-- 数据概览面板 -->
+        <section id="dashboard" class="admin-section">
+          <div class="admin-header">
+            <h2 class="admin-title">数据概览</h2>
+          </div>
+          <!-- 数据统计卡片网格 -->
+          <div class="stats-grid">
+            <!-- 文章总数统计卡片 -->
+            <div class="stat-card">
+              <div class="stat-value" id="totalArticles">0</div>
+              <div class="stat-label">文章总数</div>
             </div>
-            <ul class="admin-menu">
-                <li class="menu-item active" data-target="dashboard">
-                    <span>📊</span>
-                    <span>数据概览</span>
-                </li>
-                <li class="menu-item" data-target="articles">
-                    <span>📝</span>
-                    <span>文章管理</span>
-                </li>
-                <li class="menu-item" data-target="comments">
-                    <span>💬</span>
-                    <span>评论管理</span>
-                </li>
-                <li class="menu-item" onclick="location.href='index.html'">
-                    <span>🏠</span>
-                    <span>返回首页</span>
-                </li>
-            </ul>
-        </aside>
+            <!-- 评论总数统计卡片 -->
+            <div class="stat-card">
+              <div class="stat-value" id="totalComments">0</div>
+              <div class="stat-label">评论总数</div>
+            </div>
+            <!-- 点赞总数统计卡片 -->
+            <div class="stat-card">
+              <div class="stat-value" id="totalLikes">0</div>
+              <div class="stat-label">获赞总数</div>
+            </div>
+          </div>
+        </section>
 
-        <main class="admin-main">
-            <!-- 数据概览 -->
-            <section id="dashboard" class="admin-section">
-                <div class="admin-header">
-                    <h2 class="admin-title">数据概览</h2>
-                </div>
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-value" id="totalArticles">0</div>
-                        <div class="stat-label">文章总数</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="totalComments">0</div>
-                        <div class="stat-label">评论总数</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="totalLikes">0</div>
-                        <div class="stat-label">获赞总数</div>
-                    </div>
-                </div>
-            </section>
+        <!-- 文章管理面板 -->
+        <section id="articles" class="admin-section" style="display: none">
+          <div class="admin-header">
+            <h2 class="admin-title">文章管理</h2>
+            <!-- 写文章按钮 -->
+            <button
+              class="btn btn-primary"
+              onclick="location.href='editor.html'"
+            >
+              写文章
+            </button>
+          </div>
+          <!-- 文章列表表格 -->
+          <div class="articles-table">
+            <!-- 表格头部 -->
+            <div class="table-header">
+              <div>标题</div>
+              <div>分类</div>
+              <div>发布日期</div>
+              <div>数据</div>
+              <div>操作</div>
+            </div>
+            <!-- 文章列表容器 -->
+            <div id="articlesList"></div>
+          </div>
+        </section>
 
-            <!-- 文章管理 -->
-            <section id="articles" class="admin-section" style="display: none;">
-                <div class="admin-header">
-                    <h2 class="admin-title">文章管理</h2>
-                    <button class="btn btn-primary" onclick="location.href='editor.html'">写文章</button>
-                </div>
-                <div class="articles-table">
-                    <div class="table-header">
-                        <div>标题</div>
-                        <div>分类</div>
-                        <div>发布日期</div>
-                        <div>数据</div>
-                        <div>操作</div>
-                    </div>
-                    <div id="articlesList"></div>
-                </div>
-            </section>
-
-            <!-- 评论管理 -->
-            <section id="comments" class="admin-section" style="display: none;">
-                <div class="admin-header">
-                    <h2 class="admin-title">评论管理</h2>
-                </div>
-                <div class="comments-table" id="commentsList"></div>
-            </section>
-        </main>
+        <!-- 评论管理面板 -->
+        <section id="comments" class="admin-section" style="display: none">
+          <div class="admin-header">
+            <h2 class="admin-title">评论管理</h2>
+          </div>
+          <!-- 评论列表容器 -->
+          <div class="comments-table" id="commentsList"></div>
+        </section>
+      </main>
     </div>
 
+    <!-- 引入后台管理脚本 -->
     <script type="module" src="assets/js/admin.js"></script>
-</body>
-</html> 
+  </body>
+</html>

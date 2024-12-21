@@ -1,8 +1,18 @@
-/* 主要内容区域 */
+/**
+ * 博客首页样式
+ * 包含首屏展示、搜索框、文章列表等样式
+ * 采用现代化的视觉设计和动画效果
+ */
+
+/* 首屏大图区域样式 */
 .hero {
     padding-top: 44px;
+    /* 为固定导航栏留出空间 */
     height: 100vh;
+    /* 占满整个视口高度 */
     background: #fbfbfd;
+    /* 浅色背景 */
+    /* 居中布局 */
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -11,104 +21,128 @@
     position: relative;
 }
 
+/* 首屏标题样式 */
 .hero h1 {
     font-size: 56px;
     font-weight: 600;
     margin-bottom: 20px;
+    /* 初始状态设置（用于动画） */
     opacity: 0;
     transform: translateY(20px);
     animation: fadeInUp 0.8s ease forwards;
+    /* 向上淡入动画 */
 }
 
+/* 首屏副标题样式 */
 .hero p {
     font-size: 28px;
     color: #86868b;
+    /* 浅灰色文本 */
     margin-bottom: 30px;
+    /* 初始状态设置（用于动画） */
     opacity: 0;
     transform: translateY(20px);
     animation: fadeInUp 0.8s ease 0.2s forwards;
+    /* 延迟0.2s执行动画 */
 }
 
-/* 向下滚动提示 */
+/* 向下滚动提示样式 */
 .scroll-hint {
     position: absolute;
     bottom: 40px;
     left: 50%;
     transform: translateX(-50%);
+    /* 水平居中 */
     color: #86868b;
     font-size: 14px;
+    /* 垂直布局 */
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 10px;
     cursor: pointer;
+    /* 淡入动画 */
     opacity: 0;
     animation: fadeIn 0.8s ease 0.4s forwards;
 }
 
+/* 滚动提示箭头样式 */
 .scroll-hint .arrow {
     width: 20px;
     height: 20px;
+    /* 使用边框创建箭头形状 */
     border-right: 2px solid #86868b;
     border-bottom: 2px solid #86868b;
     transform: rotate(45deg);
     animation: bounce 2s infinite;
+    /* 持续弹跳动画 */
 }
 
-/* 搜索框样式 */
+/* 搜索框容器样式 */
 .search {
     max-width: 600px;
     margin: 0 auto;
     padding: 0 20px;
+    /* 粘性定位，滚动时固定在顶部 */
     position: sticky;
     top: 20px;
     z-index: 100;
 }
 
+/* 搜索输入框样式 */
 .search input {
     width: 100%;
     padding: 12px 20px;
     border: none;
     border-radius: 8px;
+    /* 半透明背景配合毛玻璃效果 */
     background: rgba(245, 245, 247, 0.9);
     font-size: 16px;
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
+    /* 阴影效果 */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
 }
 
+/* 搜索框聚焦状态 */
 .search input:focus {
     background: rgba(255, 255, 255, 0.95);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
     outline: none;
 }
 
-/* 文章列表样式 */
+/* 文章列表容器样式 */
 .articles {
     max-width: 1000px;
     margin: 40px auto;
-    padding: 0 20px;
-    padding-bottom: 60px;
+    padding: 0 20px 60px;
 }
 
+/* 文章卡片样式 */
 .article-card {
     background: white;
     border-radius: 18px;
     padding: 30px;
     margin-bottom: 30px;
+    /* 阴影和变换效果 */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s;
     cursor: pointer;
+    /* 初始状态（用于动画） */
     opacity: 0;
     transform: translateY(20px);
     will-change: opacity, transform;
+    /* 优化动画性能 */
 }
 
+/* 文章卡片悬停效果 */
 .article-card:hover {
     transform: translateY(-5px);
+    /* 向上浮动效果 */
 }
 
+/* 文章元信息样式 */
 .article-meta {
     margin-top: 15px;
     color: #86868b;
@@ -118,28 +152,31 @@
     gap: 15px;
 }
 
+/* 元信息图标和文本布局 */
 .article-meta span {
     display: flex;
     align-items: center;
     gap: 5px;
 }
 
+/* 文章标题样式 */
 .article-card h2 {
     color: #1d1d1f;
     margin-bottom: 10px;
 }
 
+/* 文章摘要样式 */
 .article-card p {
     color: #515154;
     line-height: 1.5;
 }
 
-/* 动画类 */
+/* 动画相关样式 */
 .article-card.animated {
     animation: fadeInUp 0.8s ease forwards;
 }
 
-/* 动画关键帧 */
+/* 动画关键帧定义 */
 @keyframes fadeInUp {
     to {
         opacity: 1;
@@ -153,49 +190,66 @@
     }
 }
 
+/* 箭头弹跳动画 */
 @keyframes bounce {
-    0%, 20%, 50%, 80%, 100% {
+
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
         transform: rotate(45deg) translateY(0);
     }
+
     40% {
         transform: rotate(45deg) translateY(-10px);
     }
+
     60% {
         transform: rotate(45deg) translateY(-5px);
     }
 }
 
-/* 当滚动到一定距离时，搜索框样式变化 */
+/* 桌面端搜索框滚动效果 */
 @media (min-width: 768px) {
     .search {
         transition: all 0.3s ease;
     }
 
+    /* 滚动时搜索框样式变化 */
     .search.scrolled {
         max-width: 400px;
+        /* 收窄宽度 */
         transform: translateY(-10px);
+        /* 向上偏移 */
     }
 
     .search.scrolled input {
         padding: 8px 16px;
+        /* 减小内边距 */
         font-size: 14px;
+        /* 减小字号 */
     }
 }
 
 /* 移动端适配 */
 @media (max-width: 767px) {
+
+    /* 移动端搜索框位置调整 */
     .search {
         position: sticky;
         top: 10px;
         margin: 0 auto;
     }
 
+    /* 移动端搜索框样式调整 */
     .search input {
         font-size: 14px;
         padding: 10px 16px;
     }
 
+    /* 移动端文章列表间距调整 */
     .articles {
         margin: 20px auto;
     }
-} 
+}

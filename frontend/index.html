@@ -1,40 +1,52 @@
+<!--
+博客首页
+提供博客的主要入口，包含导航、搜索和文章列表
+-->
 <!DOCTYPE html>
 <html lang="zh">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- 响应式设计视口设置 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>我的博客 - 简约而不简单</title>
-    <link rel="stylesheet" href="assets/css/common.css">
-    <link rel="stylesheet" href="assets/css/index.css">
-</head>
+    <!-- 引入样式文件 -->
+    <link rel="stylesheet" href="assets/css/common.css" />
+    <!-- 公共样式 -->
+    <link rel="stylesheet" href="assets/css/index.css" />
+    <!-- 首页特定样式 -->
+  </head>
 
-<body>
+  <body>
+    <!-- 顶部导航栏 -->
     <nav class="nav">
-        <ul>
-            <li><a href="articles.html">文章</a></li>
-            <li><a href="admin.html">后台管理</a></li>
-        </ul>
-    </nav>  
+      <ul>
+        <li><a href="articles.html">文章</a></li>
+        <li><a href="admin.html">后台管理</a></li>
+      </ul>
+    </nav>
 
+    <!-- 首页大图展示区域 -->
     <section class="hero">
-        <h1>探索、创造、分享</h1>
-        <p>记录生活，分享想法</p>
-        <div class="scroll-hint" id="scrollHint">
-            <span>向下滚动查看更多</span>
-            <div class="arrow"></div>
-        </div>
+      <h1>探索、创造、分享</h1>
+      <p>记录生活，分享想法</p>
+      <!-- 滚动提示 -->
+      <div class="scroll-hint" id="scrollHint">
+        <span>向下滚动查看更多</span>
+        <div class="arrow"></div>
+      </div>
     </section>
 
+    <!-- 文章搜索框 -->
     <div class="search">
-        <input type="text" placeholder="搜索文章..." id="searchInput">
+      <input type="text" placeholder="搜索文章..." id="searchInput" />
     </div>
 
+    <!-- 文章列表容器 -->
     <section class="articles" id="articlesList">
-        <!-- 文章将通过 JavaScript 动态加载 -->
+      <!-- 文章将通过 JavaScript 动态加载 -->
     </section>
 
+    <!-- 引入首页脚本 -->
     <script type="module" src="assets/js/index.js"></script>
-</body>
-
+  </body>
 </html>
