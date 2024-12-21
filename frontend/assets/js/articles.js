@@ -14,7 +14,7 @@ function setLoading(loading) {
 async function renderCategories() {
     const categories = await dataManager.getCategories();
     const categoryFilter = document.getElementById('categoryFilter');
-    
+
     // 清空现有按钮并添加"全部"按钮
     const allBtn = document.createElement('button');
     allBtn.className = 'category-btn active';
@@ -23,7 +23,7 @@ async function renderCategories() {
     allBtn.addEventListener('click', () => filterArticles('all'));
     categoryFilter.innerHTML = '';
     categoryFilter.appendChild(allBtn);
-    
+
     categories.forEach(category => {
         const btn = document.createElement('button');
         btn.className = 'category-btn';
@@ -37,7 +37,7 @@ async function renderCategories() {
 // 渲染文章列表
 async function renderArticles(articles) {
     const grid = document.getElementById('articlesGrid');
-    
+
     if (articles.length === 0) {
         grid.innerHTML = `
             <div class="no-results">
@@ -55,7 +55,7 @@ async function renderArticles(articles) {
                 <div class="article-content">
                     <span class="category-tag">${category?.name || '未分类'}</span>
                     <h2>${article.title}</h2>
-                    <p>${article.content.substring(0, 150)}${article.content.length > 150 ? '...' : ''}</p>
+                    <p>${article.summary || article.content.substring(0, 150)}${article.content.length > 150 ? '...' : ''}</p>
                 </div>
                 <div class="article-meta">
                     <div class="meta-stats">
@@ -64,7 +64,7 @@ async function renderArticles(articles) {
                         <span title="阅读数">👀 ${article.views || 0}</span>
                     </div>
                     <div class="meta-date">
-                        <span>${new Date(article.date).toLocaleDateString()}</span>
+                        <span>${article.formatted_date || new Date(article.date).toLocaleDateString()}</span>
                     </div>
                 </div>
             </article>
@@ -83,7 +83,7 @@ async function filterArticles(categoryId) {
     try {
         setLoading(true);
         currentCategory = categoryId;
-        
+
         // 更新按钮状态
         document.querySelectorAll('.category-btn').forEach(btn => {
             btn.classList.remove('active');
@@ -108,7 +108,7 @@ let searchTimeout;
 function initSearchHandler() {
     document.getElementById('searchInput').addEventListener('input', (e) => {
         searchTerm = e.target.value.toLowerCase();
-        
+
         // 防抖处理
         clearTimeout(searchTimeout);
         searchTimeout = setTimeout(() => applyFilters(), 300);

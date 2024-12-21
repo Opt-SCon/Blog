@@ -32,7 +32,7 @@ async function renderArticles() {
             <div class="article-row">
                 <div class="article-title">${article.title}</div>
                 <div class="article-category">${category?.name || '未分类'}</div>
-                <div class="article-date">${new Date(article.date).toLocaleDateString()}</div>
+                <div class="article-date">${article.formatted_date || new Date(article.date).toLocaleDateString()}</div>
                 <div class="article-stats">
                     <span>👍 ${article.likes || 0}</span>
                     <span>💬 ${article.comments?.length || 0}</span>
@@ -69,7 +69,7 @@ async function renderComments() {
                 <div class="comment-article">${comment.articleTitle}</div>
                 <div class="comment-text">${comment.content}</div>
             </div>
-            <div class="comment-date">${new Date(comment.date).toLocaleString()}</div>
+            <div class="comment-date">${comment.formatted_date || new Date(comment.date).toLocaleString()}</div>
             <div class="comment-actions">
                 <button class="action-btn btn-delete" onclick="deleteComment(${comment.articleId}, ${comment.id})">
                     删除

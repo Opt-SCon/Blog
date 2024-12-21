@@ -1,6 +1,8 @@
 import dataManager from './api.js';
 
 let editingId = null;
+let categories = null;
+let currentArticle = null;
 
 // 更新预览
 function updatePreview() {
@@ -10,28 +12,32 @@ function updatePreview() {
 
 // 初始化编辑器
 async function initEditor() {
-    // 加载分类
-    const categories = await dataManager.getCategories();
-    const categorySelect = document.getElementById('category');
-    categories.forEach(category => {
-        const option = document.createElement('option');
-        option.value = category.id;
-        option.textContent = category.name;
-        categorySelect.appendChild(option);
-    });
-
-    // 检查是否是编辑模式
-    const params = new URLSearchParams(window.location.search);
-    editingId = params.get('id');
-
-    if (editingId) {
-        const article = await dataManager.getArticleById(parseInt(editingId));
-        if (article) {
-            document.getElementById('title').value = article.title;
-            document.getElementById('category').value = article.categoryId;
-            document.getElementById('content').value = article.content;
-            updatePreview();
+    try {
+        // 只加载一次分类数据
+        if (!categories) {
+            categories = await dataManager.getCategories();
+            const categorySelect = document.getElementById('category');
+            categorySelect.innerHTML = categories.map(category => `
+                <option value="${category.id}">${category.name}</option>
+            `).join('');
         }
+
+        // 检查是否是编辑模式
+        const params = new URLSearchParams(window.location.search);
+        editingId = params.get('id');
+
+        if (editingId && !currentArticle) {
+            currentArticle = await dataManager.getArticleById(parseInt(editingId));
+            if (currentArticle) {
+                document.getElementById('title').value = currentArticle.title;
+                document.getElementById('category').value = currentArticle.categoryId;
+                document.getElementById('content').value = currentArticle.content;
+                updatePreview();
+            }
+        }
+    } catch (error) {
+        console.error('Failed to initialize editor:', error);
+        alert('初始化失败，请刷新页面重试！');
     }
 }
 
@@ -70,7 +76,7 @@ async function publishArticle(e) {
 function initEventListeners() {
     // 实时预览
     document.getElementById('content').addEventListener('input', updatePreview);
-    
+
     // 发布按钮
     document.getElementById('publishBtn').addEventListener('click', publishArticle);
 }

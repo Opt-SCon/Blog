@@ -19,13 +19,13 @@ async function renderArticles(articles) {
         return `
             <div class="article-card" onclick="window.location.href='article.html?id=${article.id}'">
                 <h2>${article.title}</h2>
-                <p>${article.content.substring(0, 150)}${article.content.length > 150 ? '...' : ''}</p>
+                <p>${article.summary || article.content.substring(0, 150)}${article.content.length > 150 ? '...' : ''}</p>
                 <div class="article-meta">
                     <span class="category-tag">${category?.name || '未分类'}</span>
                     <div class="meta-stats">
                         <span><i>👍</i>${article.likes || 0}</span>
                         <span><i>💬</i>${article.comments?.length || 0}</span>
-                        <span><i>📅</i>${new Date(article.date).toLocaleDateString()}</span>
+                        <span><i>📅</i>${article.formatted_date || new Date(article.date).toLocaleDateString()}</span>
                     </div>
                 </div>
             </div>
