@@ -5,18 +5,22 @@
 
 import dataManager from './api.js';
 
+// 存储文章和分类数据
+let articles = [];
+let categories = [];
+
 /**
  * 渲染文章列表
  * 将文章数据渲染为卡片形式的HTML
  * 包含文章标题、摘要、分类、点赞数、评论数和发布日期
  * 
- * @param {Array} articles - 文章列表数据
+ * @param {Array} filteredArticles - 过滤后的文章列表数据
  */
-async function renderArticles(articles) {
+function renderArticles(filteredArticles) {
     const articlesList = document.getElementById('articlesList');
 
     // 处理空数据状态
-    if (!articles.length) {
+    if (!filteredArticles.length) {
         articlesList.innerHTML = `
             <div class="empty-state">
                 <h3>暂无文章</h3>
@@ -26,25 +30,21 @@ async function renderArticles(articles) {
         return;
     }
 
-    // 异步渲染所有文章卡片
-    articlesList.innerHTML = await Promise.all(articles.map(async article => {
-        // 获取文章分类信息
-        const category = await dataManager.getCategoryById(article.categoryId);
-        return `
-            <div class="article-card" onclick="window.location.href='article.html?id=${article.id}'">
-                <h2>${article.title}</h2>
-                <p>${article.summary || article.content.substring(0, 150)}${article.content.length > 150 ? '...' : ''}</p>
-                <div class="article-meta">
-                    <span class="category-tag">${category?.name || '未分类'}</span>
-                    <div class="meta-stats">
-                        <span><i>👍</i>${article.likes || 0}</span>
-                        <span><i>💬</i>${article.comments?.length || 0}</span>
-                        <span><i>📅</i>${article.formatted_date || new Date(article.date).toLocaleDateString()}</span>
-                    </div>
+    // 渲染所有文章卡片
+    articlesList.innerHTML = filteredArticles.map(article => `
+        <div class="article-card" onclick="window.location.href='article.html?id=${article.id}'">
+            <h2>${article.title}</h2>
+            <p>${article.summary || ''}</p>
+            <div class="article-meta">
+                <span class="category-tag">${article.category?.name || '未分类'}</span>
+                <div class="meta-stats">
+                    <span><i>👍</i>${article.likes || 0}</span>
+                    <span><i>💬</i>${article.comments?.length || 0}</span>
+                    <span><i>📅</i>${article.formatted_date || new Date(article.date).toLocaleDateString()}</span>
                 </div>
             </div>
-        `;
-    })).then(cards => cards.join(''));
+        </div>
+    `).join('');
 
     // 为卡片添加渐入动画效果
     const cards = document.querySelectorAll('.article-card');
@@ -60,13 +60,17 @@ async function renderArticles(articles) {
  */
 let searchTimeout;
 function initSearchHandler() {
-    document.getElementById('searchInput').addEventListener('input', async (e) => {
+    document.getElementById('searchInput').addEventListener('input', (e) => {
         const searchTerm = e.target.value.toLowerCase();
 
         // 防抖处理：清除之前的定时器
         clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(async () => {
-            const filteredArticles = await dataManager.searchArticles(searchTerm);
+        searchTimeout = setTimeout(() => {
+            // 在本地过滤文章
+            const filteredArticles = articles.filter(article =>
+                article.title.toLowerCase().includes(searchTerm) ||
+                article.content.toLowerCase().includes(searchTerm)
+            );
             renderArticles(filteredArticles);
         }, 300);
     });
@@ -122,15 +126,38 @@ function initScrollHint() {
 }
 
 /**
+ * 渲染分类统计
+ * 在首页显示分类及其文章数量
+ */
+function renderCategoryStats() {
+    const statsContainer = document.querySelector('.category-stats');
+    if (!statsContainer) return;
+
+    statsContainer.innerHTML = categories
+        .sort((a, b) => b.article_count - a.article_count)
+        .map(category => `
+            <div class="category-stat">
+                <span class="category-name">${category.name}</span>
+                <span class="article-count">${category.article_count} 篇</span>
+            </div>
+        `).join('');
+}
+
+/**
  * 页面初始化
  * 加载文章数据并初始化各项功能
  * 包含错误处理机制
  */
 async function init() {
     try {
-        // 加载并渲染文章列表
-        const articles = await dataManager.getArticles();
-        await renderArticles(articles);
+        // 加载文章和分类数据
+        const data = await dataManager.getArticles();
+        articles = data.articles;
+        categories = data.categories;
+
+        // 渲染文章列表和分类统计
+        renderArticles(articles);
+        renderCategoryStats();
 
         // 初始化各项功能
         initSearchHandler();

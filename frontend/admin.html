@@ -1,6 +1,6 @@
 <!--
 博客后台管理页面
-提供博客的管理功能，包括数据概览、文章管理和评论管理
+提供博客的管理功能，包括数据概览、文章管理、评论管理和系统设置
 采用左侧菜单 + 右侧内容的经典后台布局
 -->
 <!DOCTYPE html>
@@ -42,10 +42,15 @@
             <span>💬</span>
             <span>评论管理</span>
           </li>
-          <!-- 返回首页链接 -->
-          <li class="menu-item" onclick="location.href='index.html'">
-            <span>🏠</span>
-            <span>返回首页</span>
+          <!-- 系统设置菜单项 -->
+          <li class="menu-item" data-target="settings">
+            <span>⚙️</span>
+            <span>系统设置</span>
+          </li>
+          <!-- 退出登录 -->
+          <li class="menu-item" id="logoutBtn">
+            <span>🚪</span>
+            <span>退出登录</span>
           </li>
         </ul>
       </aside>
@@ -111,6 +116,32 @@
           </div>
           <!-- 评论列表容器 -->
           <div class="comments-table" id="commentsList"></div>
+        </section>
+
+        <!-- 系统设置面板 -->
+        <section id="settings" class="admin-section" style="display: none">
+          <div class="admin-header">
+            <h2 class="admin-title">系统设置</h2>
+          </div>
+          <!-- 修改密码表单 -->
+          <div class="settings-section">
+            <h3>修改密码</h3>
+            <form id="passwordForm" class="settings-form">
+              <div class="form-group">
+                <label for="oldPassword">当前密码</label>
+                <input type="password" id="oldPassword" required />
+              </div>
+              <div class="form-group">
+                <label for="newPassword">新密码</label>
+                <input type="password" id="newPassword" required />
+              </div>
+              <div class="form-group">
+                <label for="confirmPassword">确认新密码</label>
+                <input type="password" id="confirmPassword" required />
+              </div>
+              <button type="submit" class="btn btn-primary">修改密码</button>
+            </form>
+          </div>
         </section>
       </main>
     </div>

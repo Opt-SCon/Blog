@@ -13,8 +13,6 @@ import dataManager from './api.js';
 const VIEWED_ARTICLES_KEY = 'viewed_articles';
 // 当前文章数据
 let currentArticle = null;
-// 当前文章分类信息
-let currentCategory = null;
 
 /**
  * 检查文章是否已被访问过
@@ -43,30 +41,41 @@ function markArticleAsViewed(articleId) {
 }
 
 /**
+ * 格式化日期
+ * @param {string} dateString - ISO格式的日期字符串
+ * @returns {string} 格式化后的日期字符串
+ */
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('zh-CN', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+}
+
+/**
  * 渲染文章内容
  * 更新页面标题、文章内容、元信息等
  * 
  * @param {Object} article - 文章数据对象
  */
-async function renderArticle(article) {
+function renderArticle(article) {
     if (!article) return;
 
     // 更新页面标题
     document.title = `${article.title} - 博客`;
 
-    // 获取分类信息（如果还没有获取）
-    if (!currentCategory) {
-        currentCategory = await dataManager.getCategoryById(article.categoryId);
-    }
-
     // 更新文章内容和元信息
     document.getElementById('articleTitle').textContent = article.title;
     document.getElementById('articleContent').innerHTML = article.content;
-    document.getElementById('articleCategory').textContent = currentCategory?.name || '未分类';
-    document.getElementById('articleDate').textContent = article.formatted_date;
+    document.getElementById('articleCategory').textContent = article.category?.name || '未分类';
+    document.getElementById('articleDate').textContent = formatDate(article.date);
     document.getElementById('articleViews').textContent = `阅读 ${article.views || 0}`;
-    document.getElementById('categoryTag').textContent = currentCategory?.name || '未分类';
-    document.getElementById('publishDate').textContent = article.formatted_date;
+    document.getElementById('categoryTag').textContent = article.category?.name || '未分类';
+    document.getElementById('publishDate').textContent = formatDate(article.date);
     document.getElementById('viewCount').textContent = article.views || 0;
     document.getElementById('likeCount').textContent = article.likes || 0;
     document.getElementById('commentCount').textContent = article.comments?.length || 0;
@@ -87,10 +96,19 @@ function renderComments(comments) {
         <div class="comment-item">
             <div class="comment-content">${comment.content}</div>
             <div class="comment-meta">
-                <span>${comment.formatted_date}</span>
+                <span>${formatDate(comment.date)}</span>
             </div>
         </div>
     `).join('');
+}
+
+/**
+ * 设置加载状态
+ * @param {boolean} loading - 是否显示加载状态
+ */
+function setLoading(loading) {
+    document.getElementById('loadingSpinner').style.display = loading ? 'flex' : 'none';
+    document.getElementById('articleContainer').style.display = loading ? 'none' : 'grid';
 }
 
 /**
@@ -99,6 +117,7 @@ function renderComments(comments) {
  */
 async function init() {
     try {
+        setLoading(true);
         // 从URL获取文章ID
         const params = new URLSearchParams(window.location.search);
         const articleId = parseInt(params.get('id'));
@@ -124,7 +143,7 @@ async function init() {
         }
 
         // 渲染文章内容
-        await renderArticle(currentArticle);
+        renderArticle(currentArticle);
     } catch (error) {
         console.error('Failed to load article:', error);
         // 显示错误信息
@@ -136,6 +155,8 @@ async function init() {
                 <button class="btn" onclick="window.history.back()">返回</button>
             </div>
         `;
+    } finally {
+        setLoading(false);
     }
 }
 

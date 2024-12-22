@@ -10,7 +10,7 @@ logs/
 *.log
 
 # Data
-data/*.json
+backend/data/blog.json
 
 # IDE
 .vscode/
@@ -19,3 +19,5 @@ data/*.json
 # OS
 .DS_Store
 Thumbs.db 
+
+.cursorignore

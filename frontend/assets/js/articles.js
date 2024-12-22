@@ -3,6 +3,8 @@ import dataManager from './api.js';
 let currentCategory = 'all';
 let searchTerm = '';
 let isLoading = false;
+let articles = [];
+let categories = [];
 
 // 显示/隐藏加载状态
 function setLoading(loading) {
@@ -11,8 +13,7 @@ function setLoading(loading) {
 }
 
 // 渲染分类按钮
-async function renderCategories() {
-    const categories = await dataManager.getCategories();
+function renderCategories() {
     const categoryFilter = document.getElementById('categoryFilter');
 
     // 清空现有按钮并添加"全部"按钮
@@ -28,17 +29,17 @@ async function renderCategories() {
         const btn = document.createElement('button');
         btn.className = 'category-btn';
         btn.dataset.category = category.id;
-        btn.textContent = category.name;
+        btn.textContent = `${category.name} (${category.article_count})`;
         btn.addEventListener('click', () => filterArticles(category.id));
         categoryFilter.appendChild(btn);
     });
 }
 
 // 渲染文章列表
-async function renderArticles(articles) {
+function renderArticles(filteredArticles) {
     const grid = document.getElementById('articlesGrid');
 
-    if (articles.length === 0) {
+    if (filteredArticles.length === 0) {
         grid.innerHTML = `
             <div class="no-results">
                 <h3>暂无文章</h3>
@@ -48,28 +49,25 @@ async function renderArticles(articles) {
         return;
     }
 
-    grid.innerHTML = await Promise.all(articles.map(async article => {
-        const category = await dataManager.getCategoryById(article.categoryId);
-        return `
-            <article class="article-card" onclick="location.href='article.html?id=${article.id}'">
-                <div class="article-content">
-                    <span class="category-tag">${category?.name || '未分类'}</span>
-                    <h2>${article.title}</h2>
-                    <p>${article.summary || article.content.substring(0, 150)}${article.content.length > 150 ? '...' : ''}</p>
+    grid.innerHTML = filteredArticles.map(article => `
+        <article class="article-card" onclick="location.href='article.html?id=${article.id}'">
+            <div class="article-content">
+                <span class="category-tag">${article.category?.name || '未分类'}</span>
+                <h2>${article.title}</h2>
+                <p>${article.summary || ''}</p>
+            </div>
+            <div class="article-meta">
+                <div class="meta-stats">
+                    <span title="点赞数">👍 ${article.likes || 0}</span>
+                    <span title="评论数">💬 ${article.comments?.length || 0}</span>
+                    <span title="阅读数">👀 ${article.views || 0}</span>
                 </div>
-                <div class="article-meta">
-                    <div class="meta-stats">
-                        <span title="点赞数">👍 ${article.likes || 0}</span>
-                        <span title="评论数">💬 ${article.comments?.length || 0}</span>
-                        <span title="阅读数">👀 ${article.views || 0}</span>
-                    </div>
-                    <div class="meta-date">
-                        <span>${article.formatted_date || new Date(article.date).toLocaleDateString()}</span>
-                    </div>
+                <div class="meta-date">
+                    <span>${article.formatted_date || new Date(article.date).toLocaleDateString()}</span>
                 </div>
-            </article>
-        `;
-    })).then(cards => cards.join(''));
+            </div>
+        </article>
+    `).join('');
 
     // 添加动画效果
     const cards = document.querySelectorAll('.article-card');
@@ -79,7 +77,7 @@ async function renderArticles(articles) {
 }
 
 // 过滤文章
-async function filterArticles(categoryId) {
+function filterArticles(categoryId) {
     try {
         setLoading(true);
         currentCategory = categoryId;
@@ -94,7 +92,7 @@ async function filterArticles(categoryId) {
         });
 
         // 应用过滤和搜索
-        await applyFilters();
+        applyFilters();
     } catch (error) {
         console.error('Failed to filter articles:', error);
         showError('过滤文章失败，请重试');
@@ -116,14 +114,16 @@ function initSearchHandler() {
 }
 
 // 应用过滤和搜索
-async function applyFilters() {
+function applyFilters() {
     try {
         setLoading(true);
-        let filteredArticles = await dataManager.getArticles();
+        let filteredArticles = [...articles];
 
         // 应用分类过滤
         if (currentCategory !== 'all') {
-            filteredArticles = await dataManager.filterByCategory(parseInt(currentCategory));
+            filteredArticles = filteredArticles.filter(
+                article => article.categoryId === parseInt(currentCategory)
+            );
         }
 
         // 应用搜索过滤
@@ -134,7 +134,7 @@ async function applyFilters() {
             );
         }
 
-        await renderArticles(filteredArticles);
+        renderArticles(filteredArticles);
     } catch (error) {
         console.error('Failed to apply filters:', error);
         showError('加载文章失败，请重试');
@@ -159,8 +159,11 @@ function showError(message) {
 async function init() {
     try {
         setLoading(true);
-        await renderCategories();
-        await applyFilters();
+        const data = await dataManager.getArticles();
+        articles = data.articles;
+        categories = data.categories;
+        renderCategories();
+        applyFilters();
         initSearchHandler();
     } catch (error) {
         console.error('Failed to initialize articles page:', error);

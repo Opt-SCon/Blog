@@ -6,6 +6,10 @@
 
 from datetime import datetime
 import re
+import jwt
+import bcrypt
+from functools import wraps
+from flask import request, jsonify, current_app
 
 def sanitize_html(text):
     """
@@ -39,7 +43,7 @@ def format_datetime(dt_str):
         '2023-12-21 10:30:00'
     """
     try:
-        # 处理带Z后缀的UTC时间
+        # 处理带Z的UTC时间
         dt_str = dt_str.replace('Z', '+00:00')
         dt = datetime.fromisoformat(dt_str)
         return dt.strftime('%Y-%m-%d %H:%M:%S')
@@ -88,3 +92,104 @@ def truncate_text(text, length=100):
     if len(text) <= length:
         return text
     return text[:length].rsplit(' ', 1)[0] + '...'
+
+def hash_password(password):
+    """
+    对密码进行哈希处理
+    
+    Args:
+        password: 原始密码
+        
+    Returns:
+        str: 哈希后的密码字符串
+    """
+    try:
+        if isinstance(password, str):
+            password = password.encode('utf-8')
+        salt = bcrypt.gensalt()
+        hashed = bcrypt.hashpw(password, salt)
+        return hashed.decode('utf-8')
+    except Exception as e:
+        print(f"Password hash error: {str(e)}")
+        raise
+
+def check_password(password, hashed_password):
+    """
+    验证密码
+    
+    Args:
+        password: 待验证的密码
+        hashed_password: 已哈希的密码
+        
+    Returns:
+        bool: 密码是否匹配
+    """
+    try:
+        if isinstance(password, str):
+            password = password.encode('utf-8')
+        if isinstance(hashed_password, str):
+            hashed_password = hashed_password.encode('utf-8')
+        return bcrypt.checkpw(password, hashed_password)
+    except Exception as e:
+        print(f"Password check error: {str(e)}")
+        return False
+
+def generate_token(username):
+    """
+    生成JWT token
+    
+    Args:
+        username: 用户名
+        
+    Returns:
+        str: JWT token
+    """
+    payload = {
+        'username': username,
+        'exp': datetime.utcnow() + current_app.config['JWT_ACCESS_TOKEN_EXPIRES']
+    }
+    return jwt.encode(payload, current_app.config['JWT_SECRET_KEY'], algorithm='HS256')
+
+def verify_token(token):
+    """
+    验证JWT token
+    
+    Args:
+        token: JWT token
+        
+    Returns:
+        dict: token的payload部分
+    """
+    try:
+        return jwt.decode(token, current_app.config['JWT_SECRET_KEY'], algorithms=['HS256'])
+    except jwt.ExpiredSignatureError:
+        return None
+    except jwt.InvalidTokenError:
+        return None
+
+def login_required(f):
+    """
+    认证装饰器，用于保护需要登录的API端点
+    """
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        auth_header = request.headers.get('Authorization')
+        
+        if not auth_header:
+            return jsonify({'error': 'No token provided'}), 401
+            
+        try:
+            token = auth_header.split(' ')[1]  # Bearer token
+            payload = verify_token(token)
+            
+            if payload is None:
+                return jsonify({'error': 'Invalid or expired token'}), 401
+                
+            # 将用户信息添加到请求上下文
+            request.username = payload['username']
+            return f(*args, **kwargs)
+            
+        except Exception:
+            return jsonify({'error': 'Invalid token format'}), 401
+            
+    return decorated_function

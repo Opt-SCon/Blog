@@ -21,12 +21,17 @@
       <ul>
         <li><a href="index.html">首页</a></li>
         <li><a href="articles.html">文章</a></li>
-        <li><a href="admin.html">后台管理</a></li>
       </ul>
     </nav>
 
+    <!-- 在文章容器前添加加载指示器 -->
+    <div class="loading-spinner" id="loadingSpinner">
+      <div class="spinner"></div>
+      <span>加载中...</span>
+    </div>
+
     <!-- 文章页面主容器：采用左右布局 -->
-    <div class="article-container">
+    <div class="article-container" id="articleContainer" style="display: none">
       <!-- 左侧主要内容区 -->
       <main class="article-main">
         <!-- 文章内容区 -->

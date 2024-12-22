@@ -12,7 +12,8 @@ import dataManager from './api.js';
  */
 async function updateStats() {
     // 获取所有文章数据
-    const articles = await dataManager.getArticles();
+    const response = await dataManager.getArticles();
+    const articles = response.articles;
 
     // 计算各项统计数据
     const totalArticles = articles.length;
@@ -33,13 +34,17 @@ async function updateStats() {
  */
 async function renderArticles() {
     // 获取文章数据
-    const articles = await dataManager.getArticles();
+    const response = await dataManager.getArticles();
+    const articles = response.articles;
+    const categories = response.categories;
     const articlesList = document.getElementById('articlesList');
 
-    // 异步渲染每篇文章的信息
-    articlesList.innerHTML = await Promise.all(articles.map(async article => {
-        // 获取文章分类信息
-        const category = await dataManager.getCategoryById(article.categoryId);
+    // 创建分类查找映射
+    const categoryMap = new Map(categories.map(cat => [cat.id, cat]));
+
+    // 渲染文章列表
+    articlesList.innerHTML = articles.map(article => {
+        const category = categoryMap.get(article.categoryId);
         return `
             <div class="article-row">
                 <div class="article-title">${article.title}</div>
@@ -55,7 +60,7 @@ async function renderArticles() {
                 </div>
             </div>
         `;
-    })).then(rows => rows.join(''));
+    }).join('');
 }
 
 /**
@@ -64,7 +69,8 @@ async function renderArticles() {
  */
 async function renderComments() {
     // 获取所有文章数据
-    const articles = await dataManager.getArticles();
+    const response = await dataManager.getArticles();
+    const articles = response.articles;
     const commentsList = document.getElementById('commentsList');
 
     // 提取并扁平化所有评论数据，添加文章信息
@@ -94,25 +100,63 @@ async function renderComments() {
 }
 
 /**
+ * 显示确认对话框
+ * @param {string} message - 确认信息
+ * @returns {Promise<boolean>} 用户选择结果
+ */
+function showConfirmDialog(message) {
+    return new Promise(resolve => {
+        const dialog = document.createElement('div');
+        dialog.className = 'confirm-dialog';
+        dialog.innerHTML = `
+            <div class="confirm-content">
+                <p>${message}</p>
+                <div class="confirm-buttons">
+                    <button class="btn btn-cancel">取消</button>
+                    <button class="btn btn-danger">确认删除</button>
+                </div>
+            </div>
+        `;
+
+        // 添加事件监听
+        const confirmBtn = dialog.querySelector('.btn-danger');
+        const cancelBtn = dialog.querySelector('.btn-cancel');
+
+        confirmBtn.addEventListener('click', () => {
+            document.body.removeChild(dialog);
+            resolve(true);
+        });
+
+        cancelBtn.addEventListener('click', () => {
+            document.body.removeChild(dialog);
+            resolve(false);
+        });
+
+        document.body.appendChild(dialog);
+    });
+}
+
+/**
  * 删除文章
  * 删除指定ID的文章，并更新相关数据显示
  * 
  * @param {number} id - 要删除的文章ID
  */
 async function deleteArticle(id) {
-    if (confirm('确定要删除这篇文章吗？')) {
-        try {
-            // 调用API删除文章
-            await dataManager.deleteArticle(id);
+    const confirmed = await showConfirmDialog('确定要删除这篇文章吗？删除后将无法恢复。');
+    if (!confirmed) return;
 
-            // 更新页面数据
-            await updateStats();
-            await renderArticles();
-            await renderComments();
-        } catch (error) {
-            console.error('Failed to delete article:', error);
-            alert('删除失败，请重试！');
-        }
+    try {
+        // 调用API删除文章
+        await dataManager.deleteArticle(id);
+
+        // 更新页面数据
+        await updateStats();
+        await renderArticles();
+        await renderComments();
+    } catch (error) {
+        console.error('Failed to delete article:', error);
+        alert('删除失败，请重试！');
     }
 }
 
@@ -124,18 +168,19 @@ async function deleteArticle(id) {
  * @param {number} commentId - 评论ID
  */
 async function deleteComment(articleId, commentId) {
-    if (confirm('确定要删除这条评论吗？')) {
-        try {
-            // 调用API删除评论
-            await dataManager.deleteComment(articleId, commentId);
+    const confirmed = await showConfirmDialog('确定要删除这条评论吗？删除后将无法恢复。');
+    if (!confirmed) return;
 
-            // 更新页面数据
-            await updateStats();
-            await renderComments();
-        } catch (error) {
-            console.error('Failed to delete comment:', error);
-            alert('删除失败，请重试！');
-        }
+    try {
+        // 调用API删除评论
+        await dataManager.deleteComment(articleId, commentId);
+
+        // 更新页面数据
+        await updateStats();
+        await renderComments();
+    } catch (error) {
+        console.error('Failed to delete comment:', error);
+        alert('删除失败，请重试！');
     }
 }
 
@@ -162,11 +207,69 @@ function initMenuHandlers() {
 }
 
 /**
+ * 检查认证状态
+ * 如果未登录则跳转到登录页面
+ */
+function checkAuth() {
+    if (!dataManager.isAuthenticated()) {
+        window.location.href = 'admin-login.html';
+    }
+}
+
+/**
+ * 初始化密码修改功能
+ * 处理密码修改表单的提交
+ */
+function initPasswordForm() {
+    document.getElementById('passwordForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const oldPassword = document.getElementById('oldPassword').value;
+        const newPassword = document.getElementById('newPassword').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+
+        // 验证新密码
+        if (newPassword !== confirmPassword) {
+            alert('两次输入的新密码不一致');
+            return;
+        }
+
+        if (newPassword.length < 6) {
+            alert('新密码长度不能少于6个字符');
+            return;
+        }
+
+        try {
+            await dataManager.changePassword(oldPassword, newPassword);
+            alert('密码修改成功');
+            e.target.reset();
+        } catch (error) {
+            console.error('Failed to change password:', error);
+            alert('密码修改失败：' + (error.message || '请重试'));
+        }
+    });
+}
+
+/**
+ * 初始化退出登录功能
+ */
+function initLogout() {
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+        if (confirm('确定要退出登录吗？')) {
+            await dataManager.logout();
+        }
+    });
+}
+
+/**
  * 页面初始化
  * 加载初始数据并设置事件处理程序
  */
 async function init() {
     try {
+        // 检查认证状态
+        checkAuth();
+
         // 初始化各项数据
         await updateStats();
         await renderArticles();
@@ -175,7 +278,13 @@ async function init() {
         // 初始化菜单处理
         initMenuHandlers();
 
-        // 将删除方法添加到全局作用域（供HTML onclick使用）
+        // 初始化密码修改功能
+        initPasswordForm();
+
+        // 初始化退出登录功能
+        initLogout();
+
+        // 将删除方法添��到全局作用域（供HTML onclick使用）
         window.deleteArticle = deleteArticle;
         window.deleteComment = deleteComment;
     } catch (error) {

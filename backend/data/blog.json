@@ -1,80 +1,51 @@
 {
-  "articles": [
-    {
-      "title": "确实挺不错的",
-      "content": "good\n\n\n114",
-      "categoryId": 1,
-      "id": 4,
-      "date": "2024-12-21T19:54:17.622986",
-      "likes": 14,
-      "views": 129,
-      "comments": [],
-      "formatted_date": "2024-12-21 19:54:17"
+    "admin": {
+        "username": "admin",
+        "password": "$2b$12$nmqs7W5DjGCWAwRGGxUaDOEFGvF8u5DvQRQpLZWC62XRVZrcWFQA."
     },
-    {
-      "id": 1,
-      "title": "欢迎使用个人博客系统",
-      "content": "这是一个基于 Flask 和原生 JavaScript 开发的个人博客系统。\n\n## 主要功能\n\n1. 文章管理\n2. 评论系统\n3. 分类管理\n4. 数据统计\n\n## 技术特点\n\n- 前后端分离\n- RESTful API\n- JSON 数据存储\n- 响应式设计",
-      "categoryId": 1,
-      "date": "2024-01-01T12:00:00.000Z",
-      "likes": 18,
-      "views": 107,
-      "comments": [
+    "categories": [
         {
-          "id": 1,
-          "content": "非常棒的博客系统！",
-          "date": "2024-01-02T08:30:00.000Z",
-          "formatted_date": "2024-01-02 08:30:00"
-        }
-      ],
-      "formatted_date": "2024-01-01 12:00:00"
-    },
-    {
-      "id": 2,
-      "title": "使用 Flask 开发 RESTful API",
-      "content": "Flask 是一个轻量级的 Python Web 框架，非常适合开发 RESTful API。\n\n## 优点\n\n1. 简单易用\n2. 扩展丰富\n3. 文档完善\n\n## 示例代码\n\n```python\nfrom flask import Flask\napp = Flask(__name__)\n\n@app.route('/')\ndef hello():\n    return 'Hello, World!'\n```",
-      "categoryId": 1,
-      "date": "2024-01-03T15:00:00.000Z",
-      "likes": 3,
-      "views": 37,
-      "comments": [],
-      "formatted_date": "2024-01-03 15:00:00"
-    },
-    {
-      "id": 3,
-      "title": "我的2024年计划",
-      "content": "新的一年，新的开始。\n\n## 学习计划\n\n1. 深入学习 Python\n2. 掌握前端框架\n3. 了解云计算技术\n\n## 生活计划\n\n1. 坚持运动\n2. 多读书\n3. 规律作息",
-      "categoryId": 2,
-      "date": "2024-01-05T10:00:00.000Z",
-      "likes": 9,
-      "views": 31,
-      "comments": [
-        {
-          "id": 1,
-          "content": "加油！计划很棒！",
-          "date": "2024-01-05T11:30:00.000Z",
-          "formatted_date": "2024-01-05 11:30:00"
+            "id": 1,
+            "name": "技术",
+            "description": "技术相关文章"
         },
         {
-          "id": 2,
-          "content": "我也要制定类似的计划",
-          "date": "2024-01-05T14:20:00.000Z",
-          "formatted_date": "2024-01-05 14:20:00"
+            "id": 2,
+            "name": "生活",
+            "description": "生活随笔"
         }
-      ],
-      "formatted_date": "2024-01-05 10:00:00"
-    }
-  ],
-  "categories": [
-    {
-      "id": 1,
-      "name": "技术",
-      "description": "技术相关文章"
-    },
-    {
-      "id": 2,
-      "name": "生活",
-      "description": "生活随笔"
-    }
-  ]
+    ],
+    "articles": [
+        {
+            "id": 1,
+            "title": "欢迎使用我的博客",
+            "content": "\n# 欢迎使用我的博客系统！\n\n这是一个示例文章，展示了博客系统的基本功能。\n\n## 主要功能\n\n1. 文章管理\n2. 分类管理\n3. 评论系统\n4. 后台管理\n\n## 开始使用\n\n1. 首先进入后台管理页面注册管理员账号\n2. 登录后即可开始管理您的博客\n3. 可以创建新的文章和分类\n4. 可以管理评论和其他设置\n\n祝您使用愉快！\n\t\t\t\t",
+            "categoryId": 1,
+            "date": "2024-12-23T03:15:30.066625",
+            "views": 1,
+            "likes": 0,
+            "comments": []
+        },
+        {
+            "id": 2,
+            "title": "阿斯顿发送到发",
+            "content": "阿斯顿发送到发送到发送到发送到",
+            "categoryId": 2,
+            "date": "2024-12-23T03:18:45.396082",
+            "views": 1,
+            "likes": 12,
+            "comments": [
+                {
+                    "content": "撒发送到发",
+                    "date": "2024-12-23T03:19:01.435693",
+                    "id": 1
+                },
+                {
+                    "content": "阿斯顿发送到发送到发",
+                    "date": "2024-12-23T03:19:04.177817",
+                    "id": 2
+                }
+            ]
+        }
+    ]
 }
