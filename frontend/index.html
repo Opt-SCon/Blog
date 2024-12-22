@@ -21,7 +21,6 @@
     <nav class="nav">
       <ul>
         <li><a href="articles.html">文章</a></li>
-        <li><a href="admin.html">后台管理</a></li>
       </ul>
     </nav>
 
@@ -41,10 +40,20 @@
       <input type="text" placeholder="搜索文章..." id="searchInput" />
     </div>
 
-    <!-- 文章列表容器 -->
-    <section class="articles" id="articlesList">
-      <!-- 文章将通过 JavaScript 动态加载 -->
-    </section>
+    <!-- 主要内容区域 -->
+    <div class="main-content">
+      <!-- 分类统计 -->
+      <aside class="sidebar">
+        <div class="category-stats">
+          <!-- 分类统计将通过 JavaScript 动态加载 -->
+        </div>
+      </aside>
+
+      <!-- 文章列表容器 -->
+      <section class="articles" id="articlesList">
+        <!-- 文章将通过 JavaScript 动态加载 -->
+      </section>
+    </div>
 
     <!-- 引入首页脚本 -->
     <script type="module" src="assets/js/index.js"></script>

@@ -4,8 +4,19 @@
  * 使用单例模式确保全局只有一个实例
  */
 
-// API基础URL配置
-const API_BASE_URL = 'http://localhost:5050/api';
+import config from './config.js';
+
+/**
+ * 自定义API错误类
+ */
+class APIError extends Error {
+    constructor(message, status, data) {
+        super(message);
+        this.name = 'APIError';
+        this.status = status;
+        this.data = data;
+    }
+}
 
 /**
  * 数据管理器类
@@ -15,6 +26,8 @@ class DataManager {
     constructor() {
         this.initialized = false;
         this.initPromise = null;
+        this.baseURL = config.API_BASE_URL;
+        this.categoriesCache = null;
     }
 
     /**
@@ -24,29 +37,71 @@ class DataManager {
      * @param {string} endpoint - API端点路径
      * @param {object} options - 请求配置选项
      * @returns {Promise<any>} 请求响应数据
-     * @throws {Error} 当API请求失败时抛出错误
+     * @throws {APIError} 当API请求失败时抛出错误
      */
     async request(endpoint, options = {}) {
-        const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-            ...options,
-            credentials: 'include',  // 支持跨域认证
-            headers: {
-                'Content-Type': 'application/json',
-                ...options.headers
-            },
-            mode: 'cors'  // 启用CORS
-        });
+        try {
+            const token = this.getAuthToken();
+            if (token) {
+                options.headers = {
+                    ...options.headers,
+                    'Authorization': `Bearer ${token}`
+                };
+            }
 
-        if (!response.ok) {
-            throw new Error(`API request failed: ${response.statusText}`);
+            const response = await fetch(`${this.baseURL}${endpoint}`, {
+                ...options,
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...options.headers
+                },
+                mode: 'cors'
+            });
+
+            // 处理认证失败
+            if (response.status === 401) {
+                localStorage.removeItem('auth_token');
+                if (window.location.pathname !== '/admin-login.html') {
+                    window.location.href = 'admin-login.html';
+                }
+                throw new APIError('Authentication failed', 401);
+            }
+
+            // 处理无内容响应
+            if (response.status === 204) {
+                return null;
+            }
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new APIError(
+                    data.error || 'API request failed',
+                    response.status,
+                    data
+                );
+            }
+
+            return data;
+        } catch (error) {
+            if (error instanceof APIError) {
+                throw error;
+            }
+            throw new APIError(
+                'Network error or server is unreachable',
+                0,
+                { originalError: error.message }
+            );
         }
+    }
 
-        // 处理无内容响应
-        if (response.status === 204) {
-            return null;
-        }
-
-        return response.json();
+    /**
+     * 获取认证令牌
+     * @returns {string|null} 认证令牌
+     */
+    getAuthToken() {
+        return localStorage.getItem('auth_token');
     }
 
     /**
@@ -55,7 +110,7 @@ class DataManager {
 
     /**
      * 获取所有文章列表
-     * @returns {Promise<Array>} 文章列表
+     * @returns {Promise<{articles: Array, categories: Array}>} 文章列表和分类列表
      */
     async getArticles() {
         return this.request('/articles');
@@ -160,7 +215,156 @@ class DataManager {
      * @returns {Promise<Array>} 分类列表
      */
     async getCategories() {
-        return this.request('/categories');
+        const response = await this.request('/articles');
+        return response.categories;
+    }
+
+    /**
+     * 获取指定分类的详细信息
+     * @param {number} id - 分类ID
+     * @returns {Promise<Object>} 分类详情，包含该分类下的文章
+     */
+    async getCategoryDetails(id) {
+        return this.request(`/categories/${id}`);
+    }
+
+    /**
+     * 创建新分类
+     * @param {Object} category - 分类数据
+     * @returns {Promise<Object>} 创建的分类
+     */
+    async addCategory(category) {
+        const result = await this.request('/categories', {
+            method: 'POST',
+            body: JSON.stringify(category)
+        });
+        this.categoriesCache = null; // 清除缓存
+        return result;
+    }
+
+    /**
+     * 更新分类
+     * @param {number} id - 分类ID
+     * @param {Object} category - 更新的分类数据
+     * @returns {Promise<Object>} 更新后的分类
+     */
+    async updateCategory(id, category) {
+        const result = await this.request(`/categories/${id}`, {
+            method: 'PUT',
+            body: JSON.stringify(category)
+        });
+        this.categoriesCache = null; // 清除缓存
+        return result;
+    }
+
+    /**
+     * 删除分类
+     * @param {number} id - 分类ID
+     * @returns {Promise<null>}
+     */
+    async deleteCategory(id) {
+        const result = await this.request(`/categories/${id}`, {
+            method: 'DELETE'
+        });
+        this.categoriesCache = null; // 清除缓存
+        return result;
+    }
+
+    /**
+     * 认证相关API方法
+     */
+
+    /**
+     * 检查是否已有管理员账号
+     * @returns {Promise<boolean>} 是否已有管理员
+     */
+    async checkAdmin() {
+        try {
+            const response = await this.request('/auth/check-admin');
+            return response.hasAdmin;
+        } catch (error) {
+            console.error('Error checking admin status:', error);
+            return false;
+        }
+    }
+
+    /**
+     * 注册管理员账号
+     * @param {string} username - 用户名
+     * @param {string} password - 密码
+     * @returns {Promise<Object>} 注册结果，包含token
+     */
+    async register(username, password) {
+        const response = await this.request('/auth/register', {
+            method: 'POST',
+            body: JSON.stringify({ username, password })
+        });
+        if (response.token) {
+            localStorage.setItem('auth_token', response.token);
+        }
+        return response;
+    }
+
+    /**
+     * 检查用户是否已认证
+     * @returns {Promise<boolean>} 是否已认证
+     */
+    async isAuthenticated() {
+        try {
+            const token = this.getAuthToken();
+            if (!token) {
+                return false;
+            }
+            // 验证token有效性
+            await this.request('/auth/verify');
+            return true;
+        } catch (error) {
+            if (error.status === 401) {
+                localStorage.removeItem('auth_token');
+            }
+            return false;
+        }
+    }
+
+    /**
+     * 管理员登录
+     * @param {string} username - 用户名
+     * @param {string} password - 密码
+     * @returns {Promise<Object>} 登录结果，包含token
+     */
+    async login(username, password) {
+        const response = await this.request('/auth/login', {
+            method: 'POST',
+            body: JSON.stringify({ username, password })
+        });
+        if (response.token) {
+            localStorage.setItem('auth_token', response.token);
+        }
+        return response;
+    }
+
+    /**
+     * 退出登录
+     * @returns {Promise<null>}
+     */
+    async logout() {
+        localStorage.removeItem('auth_token');
+        return this.request('/auth/logout', {
+            method: 'POST'
+        });
+    }
+
+    /**
+     * 修改密码
+     * @param {string} oldPassword - 旧密码
+     * @param {string} newPassword - 新密码
+     * @returns {Promise<Object>} 修改结果
+     */
+    async changePassword(oldPassword, newPassword) {
+        return this.request('/auth/change-password', {
+            method: 'POST',
+            body: JSON.stringify({ oldPassword, newPassword })
+        });
     }
 
     /**
@@ -170,48 +374,9 @@ class DataManager {
      */
     async getCategoryById(id) {
         const categories = await this.getCategories();
-        return categories.find(category => category.id === parseInt(id));
-    }
-
-    /**
-     * 搜索功能
-     * 在文章标题和内容中搜索关键词
-     * 
-     * @param {string} query - 搜索关键词
-     * @returns {Promise<Array>} 匹配的文章列表
-     */
-    async searchArticles(query) {
-        const articles = await this.getArticles();
-        if (!query) return articles;
-
-        query = query.toLowerCase().trim();
-        const words = query.split(/\s+/);
-
-        return articles.filter(article => {
-            const title = article.title.toLowerCase();
-            const content = article.content.toLowerCase();
-            return words.every(word =>
-                title.includes(word) || content.includes(word)
-            );
-        });
-    }
-
-    /**
-     * 分类过滤
-     * 按分类筛选文章
-     * 
-     * @param {string|number} categoryId - 分类ID，'all'表示所有分类
-     * @returns {Promise<Array>} 过滤后的文章列表
-     */
-    async filterByCategory(categoryId) {
-        const articles = await this.getArticles();
-        if (categoryId === 'all') return articles;
-        return articles.filter(article => article.categoryId === parseInt(categoryId));
+        return categories.find(category => category.id === id) || null;
     }
 }
 
-// 创建单例实例
-const dataManager = new DataManager();
-
-// 导出实例
-export default dataManager; 
+// 导出单例实例
+export default new DataManager(); 

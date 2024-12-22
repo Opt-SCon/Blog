@@ -62,6 +62,16 @@ async function initEditor() {
 }
 
 /**
+ * 设置提交按钮状态
+ * @param {boolean} disabled - 是否禁用按钮
+ */
+function setSubmitButtonState(disabled) {
+    const publishBtn = document.getElementById('publishBtn');
+    publishBtn.disabled = disabled;
+    publishBtn.textContent = disabled ? '发布中...' : '发布';
+}
+
+/**
  * 发布文章
  * 处理文章的保存或更新操作
  * 
@@ -81,14 +91,17 @@ async function publishArticle(e) {
         return;
     }
 
-    // 构建文章数据
-    const article = {
-        title,
-        content,
-        categoryId
-    };
+    // 防止重复提交
+    setSubmitButtonState(true);
 
     try {
+        // 构建文章数据
+        const article = {
+            title,
+            content,
+            categoryId
+        };
+
         // 根据是否有editingId判断是更新还是创建
         if (editingId) {
             await dataManager.updateArticle(parseInt(editingId), article);
@@ -100,6 +113,7 @@ async function publishArticle(e) {
     } catch (error) {
         console.error('Failed to save article:', error);
         alert('保存失败，请重试！');
+        setSubmitButtonState(false);
     }
 }
 

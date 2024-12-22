@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>管理员登录</title>
+    <link rel="stylesheet" href="assets/css/common.css" />
+    <style>
+      .login-container {
+        max-width: 400px;
+        margin: 100px auto;
+        padding: 2em;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .login-title {
+        text-align: center;
+        margin-bottom: 2em;
+      }
+
+      .login-form {
+        display: flex;
+        flex-direction: column;
+        gap: 1em;
+      }
+
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5em;
+      }
+
+      .form-group label {
+        color: #666;
+      }
+
+      .form-group input {
+        padding: 0.8em;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 1em;
+      }
+
+      .form-group input:focus {
+        outline: none;
+        border-color: #666;
+      }
+
+      .error-message {
+        color: #dc3545;
+        font-size: 0.9em;
+        margin-top: 0.5em;
+        display: none;
+      }
+
+      .btn-login {
+        background: #007bff;
+        color: white;
+        border: none;
+        padding: 0.8em;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1em;
+        margin-top: 1em;
+      }
+
+      .btn-login:hover {
+        background: #0056b3;
+      }
+
+      .btn-login:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="login-container">
+      <h2 class="login-title">管理员登录</h2>
+      <form class="login-form" id="loginForm">
+        <div class="form-group">
+          <label for="username">用户名</label>
+          <input type="text" id="username" name="username" required />
+          <div class="error-message" id="usernameError">请输入正确的用户名</div>
+        </div>
+        <div class="form-group">
+          <label for="password">密码</label>
+          <input type="password" id="password" name="password" required />
+          <div class="error-message" id="passwordError">请输入正确的密码</div>
+        </div>
+        <button type="submit" class="btn-login" id="loginBtn">登录</button>
+      </form>
+    </div>
+
+    <script type="module">
+      import dataManager from "./assets/js/api.js";
+
+      // 检查是否已有管理员账号
+      async function checkAdminExists() {
+        const hasAdmin = await dataManager.checkAdmin();
+        if (!hasAdmin) {
+          window.location.href = "admin-register.html";
+        }
+      }
+
+      // 处理表单提交
+      async function handleSubmit(e) {
+        e.preventDefault();
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+        const loginBtn = document.getElementById("loginBtn");
+
+        // 重置错误提示
+        document.getElementById("usernameError").style.display = "none";
+        document.getElementById("passwordError").style.display = "none";
+
+        try {
+          loginBtn.disabled = true;
+          loginBtn.textContent = "登录中...";
+
+          await dataManager.login(username, password);
+          window.location.href = "admin.html";
+        } catch (error) {
+          console.error("Login failed:", error);
+          if (error.status === 401) {
+            document.getElementById("usernameError").style.display = "block";
+            document.getElementById("passwordError").style.display = "block";
+          } else {
+            alert("登录失败，请重试！");
+          }
+        } finally {
+          loginBtn.disabled = false;
+          loginBtn.textContent = "登录";
+        }
+      }
+
+      // 初始化页面
+      document.addEventListener("DOMContentLoaded", () => {
+        checkAdminExists();
+        document
+          .getElementById("loginForm")
+          .addEventListener("submit", handleSubmit);
+      });
+    </script>
+  </body>
+</html>
