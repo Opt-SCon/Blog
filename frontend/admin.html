@@ -4,149 +4,163 @@
 采用左侧菜单 + 右侧内容的经典后台布局
 -->
 <!DOCTYPE html>
-<html lang="zh">
-  <head>
-    <meta charset="UTF-8" />
-    <!-- 响应式设计视口设置 -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>博客管理后台</title>
-    <!-- 引入样式文件 -->
-    <link rel="stylesheet" href="assets/css/common.css" />
-    <!-- 公共样式 -->
-    <link rel="stylesheet" href="assets/css/admin.css" />
-    <!-- 后台特定样式 -->
-  </head>
-  <body>
-    <!-- 后台主容器：采用左侧菜单 + 右侧内容的布局 -->
-    <div class="admin-container">
-      <!-- 左侧菜单栏 -->
-      <aside class="admin-sidebar">
-        <!-- 后台标题 -->
-        <div class="admin-logo">
-          <h2>博客管理</h2>
+<html lang="zh" data-theme="light">
+
+<head>
+  <meta charset="UTF-8" />
+  <!-- 响应式设计视口设置 -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>博客管理后台</title>
+  <!-- 引入主题样式 -->
+  <link rel="stylesheet" href="assets/css/theme.css" />
+  <!-- 引入后台样式 -->
+  <link rel="stylesheet" href="assets/css/admin.css" />
+</head>
+
+<body>
+  <!-- 后台主容器：采用左侧菜单 + 右侧内容的布局 -->
+  <div class="admin-container">
+    <!-- 左侧菜单栏 -->
+    <aside class="admin-sidebar">
+      <!-- 后台标题 -->
+      <div class="admin-logo">
+        <h2>博客管理</h2>
+      </div>
+      <!-- 菜单列表 -->
+      <ul class="admin-menu">
+        <!-- 数据概览菜单项 -->
+        <li class="menu-item active" data-target="dashboard">
+          <span class="menu-icon">📊</span>
+          <span class="menu-text">数据概览</span>
+        </li>
+        <!-- 文章管理菜单项 -->
+        <li class="menu-item" data-target="articles">
+          <span class="menu-icon">📝</span>
+          <span class="menu-text">文章管理</span>
+        </li>
+        <!-- 评论管理菜单项 -->
+        <li class="menu-item" data-target="comments">
+          <span class="menu-icon">💬</span>
+          <span class="menu-text">评论管理</span>
+        </li>
+        <!-- 系统设置菜单项 -->
+        <li class="menu-item" data-target="settings">
+          <span class="menu-icon">⚙️</span>
+          <span class="menu-text">系统设置</span>
+        </li>
+        <!-- 退出登录 -->
+        <li class="menu-item" id="logoutBtn">
+          <span class="menu-icon">🚪</span>
+          <span class="menu-text">退出登录</span>
+        </li>
+      </ul>
+    </aside>
+
+    <!-- 右侧内容区域 -->
+    <main class="admin-main">
+      <!-- 数据概览面板 -->
+      <section id="dashboard" class="admin-section">
+        <div class="admin-header">
+          <h2 class="admin-title">数据概览</h2>
         </div>
-        <!-- 菜单列表 -->
-        <ul class="admin-menu">
-          <!-- 数据概览菜单项 -->
-          <li class="menu-item active" data-target="dashboard">
-            <span>📊</span>
-            <span>数据概览</span>
-          </li>
-          <!-- 文章管理菜单项 -->
-          <li class="menu-item" data-target="articles">
-            <span>📝</span>
-            <span>文章管理</span>
-          </li>
-          <!-- 评论管理菜单项 -->
-          <li class="menu-item" data-target="comments">
-            <span>💬</span>
-            <span>评论管理</span>
-          </li>
-          <!-- 系统设置菜单项 -->
-          <li class="menu-item" data-target="settings">
-            <span>⚙️</span>
-            <span>系统设置</span>
-          </li>
-          <!-- 退出登录 -->
-          <li class="menu-item" id="logoutBtn">
-            <span>🚪</span>
-            <span>退出登录</span>
-          </li>
-        </ul>
-      </aside>
-
-      <!-- 右侧内容区域 -->
-      <main class="admin-main">
-        <!-- 数据概览面板 -->
-        <section id="dashboard" class="admin-section">
-          <div class="admin-header">
-            <h2 class="admin-title">数据概览</h2>
+        <!-- 数据统计卡片网格 -->
+        <div class="stats-grid">
+          <!-- 文章总数统计卡片 -->
+          <div class="stat-card">
+            <div class="stat-value" id="totalArticles">0</div>
+            <div class="stat-label">文章总数</div>
           </div>
-          <!-- 数据统计卡片网格 -->
-          <div class="stats-grid">
-            <!-- 文章总数统计卡片 -->
-            <div class="stat-card">
-              <div class="stat-value" id="totalArticles">0</div>
-              <div class="stat-label">文章总数</div>
+          <!-- 评论总数统计卡片 -->
+          <div class="stat-card">
+            <div class="stat-value" id="totalComments">0</div>
+            <div class="stat-label">评论总数</div>
+          </div>
+          <!-- 点赞总数统计卡片 -->
+          <div class="stat-card">
+            <div class="stat-value" id="totalLikes">0</div>
+            <div class="stat-label">获赞总数</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 文章管理面板 -->
+      <section id="articles" class="admin-section" style="display: none">
+        <div class="admin-header">
+          <h2 class="admin-title">文章管理</h2>
+          <!-- 写文章按钮 -->
+          <button class="btn btn-primary" onclick="location.href='editor.html'">
+            写文章
+          </button>
+        </div>
+        <!-- 文章列表表格 -->
+        <div class="articles-table">
+          <!-- 表格头部 -->
+          <div class="table-header">
+            <div>标题</div>
+            <div>分类</div>
+            <div>发布日期</div>
+            <div>数据</div>
+            <div>操作</div>
+          </div>
+          <!-- 文章列表容器 -->
+          <div id="articlesList" class="table-body"></div>
+        </div>
+      </section>
+
+      <!-- 评论管理面板 -->
+      <section id="comments" class="admin-section" style="display: none">
+        <div class="admin-header">
+          <h2 class="admin-title">评论管理</h2>
+        </div>
+        <!-- 评论列表容器 -->
+        <div class="comments-table">
+          <div id="commentsList"></div>
+        </div>
+      </section>
+
+      <!-- 系统设置面板 -->
+      <section id="settings" class="admin-section" style="display: none">
+        <div class="admin-header">
+          <h2 class="admin-title">系统设置</h2>
+        </div>
+        <div class="settings-section">
+          <h3>主题设置</h3>
+          <div class="form-group">
+            <label>主题模式</label>
+            <div class="theme-switch">
+              <button class="btn" data-theme="light" data-active="false"
+                onclick="window.admin.setTheme('light')">浅色</button>
+              <button class="btn" data-theme="dark" data-active="false"
+                onclick="window.admin.setTheme('dark')">深色</button>
             </div>
-            <!-- 评论总数统计卡片 -->
-            <div class="stat-card">
-              <div class="stat-value" id="totalComments">0</div>
-              <div class="stat-label">评论总数</div>
+          </div>
+        </div>
+        <div class="settings-section">
+          <h3>修改密码</h3>
+          <form id="passwordForm" class="settings-form">
+            <div class="form-group">
+              <label for="oldPassword">当前密码</label>
+              <input type="password" id="oldPassword" required />
             </div>
-            <!-- 点赞总数统计卡片 -->
-            <div class="stat-card">
-              <div class="stat-value" id="totalLikes">0</div>
-              <div class="stat-label">获赞总数</div>
+            <div class="form-group">
+              <label for="newPassword">新密码</label>
+              <input type="password" id="newPassword" required />
             </div>
-          </div>
-        </section>
-
-        <!-- 文章管理面板 -->
-        <section id="articles" class="admin-section" style="display: none">
-          <div class="admin-header">
-            <h2 class="admin-title">文章管理</h2>
-            <!-- 写文章按钮 -->
-            <button
-              class="btn btn-primary"
-              onclick="location.href='editor.html'"
-            >
-              写文章
-            </button>
-          </div>
-          <!-- 文章列表表格 -->
-          <div class="articles-table">
-            <!-- 表格头部 -->
-            <div class="table-header">
-              <div>标题</div>
-              <div>分类</div>
-              <div>发布日期</div>
-              <div>数据</div>
-              <div>操作</div>
+            <div class="form-group">
+              <label for="confirmPassword">确认新密码</label>
+              <input type="password" id="confirmPassword" required />
             </div>
-            <!-- 文章列表容器 -->
-            <div id="articlesList"></div>
-          </div>
-        </section>
+            <button type="submit" class="btn btn-primary">修改密码</button>
+          </form>
+        </div>
+      </section>
+    </main>
+  </div>
 
-        <!-- 评论管理面板 -->
-        <section id="comments" class="admin-section" style="display: none">
-          <div class="admin-header">
-            <h2 class="admin-title">评论管理</h2>
-          </div>
-          <!-- 评论列表容器 -->
-          <div class="comments-table" id="commentsList"></div>
-        </section>
+  <!-- 引入组件库 -->
+  <script type="module" src="assets/js/components/index.js"></script>
+  <!-- 引入后台管理脚本 -->
+  <script type="module" src="assets/js/admin.js"></script>
+</body>
 
-        <!-- 系统设置面板 -->
-        <section id="settings" class="admin-section" style="display: none">
-          <div class="admin-header">
-            <h2 class="admin-title">系统设置</h2>
-          </div>
-          <!-- 修改密码表单 -->
-          <div class="settings-section">
-            <h3>修改密码</h3>
-            <form id="passwordForm" class="settings-form">
-              <div class="form-group">
-                <label for="oldPassword">当前密码</label>
-                <input type="password" id="oldPassword" required />
-              </div>
-              <div class="form-group">
-                <label for="newPassword">新密码</label>
-                <input type="password" id="newPassword" required />
-              </div>
-              <div class="form-group">
-                <label for="confirmPassword">确认新密码</label>
-                <input type="password" id="confirmPassword" required />
-              </div>
-              <button type="submit" class="btn btn-primary">修改密码</button>
-            </form>
-          </div>
-        </section>
-      </main>
-    </div>
-
-    <!-- 引入后台管理脚本 -->
-    <script type="module" src="assets/js/admin.js"></script>
-  </body>
 </html>

@@ -48,11 +48,13 @@ from backend.blueprints.auth import auth_bp
 from backend.blueprints.articles import articles_bp
 from backend.blueprints.comments import comments_bp
 from backend.blueprints.categories import categories_bp
+from backend.blueprints.uploads import uploads_bp
 
 app.register_blueprint(auth_bp)
 app.register_blueprint(articles_bp)
 app.register_blueprint(comments_bp)
 app.register_blueprint(categories_bp)
+app.register_blueprint(uploads_bp)
 
 # 自定义错误类
 class BlogError(Exception):

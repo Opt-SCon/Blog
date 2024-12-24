@@ -97,6 +97,59 @@ class DataManager {
     }
 
     /**
+     * 上传文件
+     * @param {string} endpoint - API端点路径
+     * @param {FormData} formData - 包含文件的FormData对象
+     * @returns {Promise<any>} 上传响应数据
+     */
+    async uploadFile(endpoint, formData) {
+        try {
+            const token = this.getAuthToken();
+            const headers = {};
+            if (token) {
+                headers['Authorization'] = `Bearer ${token}`;
+            }
+
+            const response = await fetch(`${this.baseURL}${endpoint}`, {
+                method: 'POST',
+                body: formData,
+                credentials: 'include',
+                headers,
+                mode: 'cors'
+            });
+
+            if (response.status === 401) {
+                localStorage.removeItem('auth_token');
+                if (window.location.pathname !== '/admin-login.html') {
+                    window.location.href = 'admin-login.html';
+                }
+                throw new APIError('Authentication failed', 401);
+            }
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new APIError(
+                    data.error || 'Upload failed',
+                    response.status,
+                    data
+                );
+            }
+
+            return data;
+        } catch (error) {
+            if (error instanceof APIError) {
+                throw error;
+            }
+            throw new APIError(
+                'Network error or server is unreachable',
+                0,
+                { originalError: error.message }
+            );
+        }
+    }
+
+    /**
      * 获取认证令牌
      * @returns {string|null} 认证令牌
      */
@@ -220,54 +273,14 @@ class DataManager {
     }
 
     /**
-     * 获取指定分类的详细信息
-     * @param {number} id - 分类ID
-     * @returns {Promise<Object>} 分类详情，包含该分类下的文章
+     * 上传图片
+     * @param {File} file - 图片文件
+     * @returns {Promise<{filename: string, url: string}>} 上传结果
      */
-    async getCategoryDetails(id) {
-        return this.request(`/categories/${id}`);
-    }
-
-    /**
-     * 创建新分类
-     * @param {Object} category - 分类数据
-     * @returns {Promise<Object>} 创建的分类
-     */
-    async addCategory(category) {
-        const result = await this.request('/categories', {
-            method: 'POST',
-            body: JSON.stringify(category)
-        });
-        this.categoriesCache = null; // 清除缓存
-        return result;
-    }
-
-    /**
-     * 更新分类
-     * @param {number} id - 分类ID
-     * @param {Object} category - 更新的分类数据
-     * @returns {Promise<Object>} 更新后的分类
-     */
-    async updateCategory(id, category) {
-        const result = await this.request(`/categories/${id}`, {
-            method: 'PUT',
-            body: JSON.stringify(category)
-        });
-        this.categoriesCache = null; // 清除缓存
-        return result;
-    }
-
-    /**
-     * 删除分类
-     * @param {number} id - 分类ID
-     * @returns {Promise<null>}
-     */
-    async deleteCategory(id) {
-        const result = await this.request(`/categories/${id}`, {
-            method: 'DELETE'
-        });
-        this.categoriesCache = null; // 清除缓存
-        return result;
+    async uploadImage(file) {
+        const formData = new FormData();
+        formData.append('image', file);
+        return this.uploadFile('/upload/image', formData);
     }
 
     /**

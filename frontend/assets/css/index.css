@@ -277,3 +277,59 @@
         padding: 0.8em 1em;
     }
 }
+
+.article-summary {
+    font-size: 14px;
+    color: #515154;
+    line-height: 1.6;
+    margin: 0.8em 0;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+/* Markdown摘要样式 */
+.article-summary p {
+    margin: 0;
+}
+
+.article-summary h1,
+.article-summary h2,
+.article-summary h3,
+.article-summary h4,
+.article-summary h5,
+.article-summary h6 {
+    font-size: inherit;
+    margin: 0;
+    display: inline;
+}
+
+.article-summary code {
+    background: #f8f9fa;
+    padding: 0.2em 0.4em;
+    border-radius: 3px;
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+    font-size: 0.9em;
+}
+
+.article-summary pre,
+.article-summary blockquote,
+.article-summary ul,
+.article-summary ol,
+.article-summary table {
+    display: none;
+}
+
+.article-summary img {
+    display: none;
+}
+
+.article-summary a {
+    color: #0071e3;
+    text-decoration: none;
+}
+
+.article-summary a:hover {
+    text-decoration: underline;
+}

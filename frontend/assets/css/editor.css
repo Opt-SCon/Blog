@@ -1,5 +1,5 @@
 .editor-container {
-    max-width: 1000px;
+    max-width: 1400px;
     margin: 84px auto 40px;
     padding: 0 20px;
 }
@@ -12,7 +12,6 @@
 }
 
 .editor-form input,
-.editor-form textarea,
 .editor-form select {
     width: 100%;
     margin-bottom: 20px;
@@ -24,17 +23,10 @@
 }
 
 .editor-form input:focus,
-.editor-form textarea:focus,
 .editor-form select:focus {
     outline: none;
     border-color: #0071e3;
     box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.1);
-}
-
-.editor-form textarea {
-    min-height: 300px;
-    resize: vertical;
-    font-family: inherit;
 }
 
 .editor-form select {
@@ -42,15 +34,60 @@
     cursor: pointer;
 }
 
-.preview {
-    padding: 20px;
+/* Markdown编辑器容器样式 */
+#editor-md {
+    margin-bottom: 20px;
     border: 1px solid #d2d2d7;
     border-radius: 8px;
-    margin-top: 20px;
-    min-height: 200px;
+    overflow: hidden;
+}
+
+/* 自定义Editor.md样式 */
+.editormd {
+    border: none !important;
+    border-radius: 8px;
+}
+
+.editormd-toolbar {
+    border-radius: 8px 8px 0 0 !important;
+    background: #f5f5f7 !important;
+    border-bottom: 1px solid #d2d2d7 !important;
+}
+
+.editormd-preview-container {
+    padding: 20px !important;
+    background: #fff !important;
+}
+
+.editormd-preview-active {
+    padding: 20px !important;
+    background: #fff !important;
+}
+
+/* 代码块样式 */
+.editormd-preview-container pre.prettyprint {
+    padding: 10px !important;
+    border: 1px solid #d2d2d7 !important;
+    background: #f8f9fa !important;
+}
+
+/* 表格样式 */
+.editormd-preview-container table {
+    border-collapse: collapse;
+    margin: 15px 0;
+}
+
+.editormd-preview-container th,
+.editormd-preview-container td {
+    border: 1px solid #d2d2d7;
+    padding: 8px;
+}
+
+.editormd-preview-container th {
     background: #f5f5f7;
 }
 
+/* 按钮样式 */
 .btn {
     padding: 8px 16px;
     border-radius: 8px;
@@ -69,14 +106,36 @@
     background: #0077ed;
 }
 
+.btn-primary:disabled {
+    background: #999;
+    cursor: not-allowed;
+}
+
+/* 响应式设计 */
+@media (max-width: 1200px) {
+    .editor-container {
+        max-width: 100%;
+        padding: 0 15px;
+    }
+}
+
 @media (max-width: 768px) {
     .editor-container {
         margin-top: 64px;
     }
 
     .editor-form input,
-    .editor-form textarea,
     .editor-form select {
         font-size: 14px;
+    }
+
+    /* 在移动设备上调整编辑器布局 */
+    .editormd-preview-container,
+    .editormd-preview-active {
+        display: none !important;
+    }
+
+    .editormd-preview-container.editormd-preview-show {
+        display: block !important;
     }
 } 
