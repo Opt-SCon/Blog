@@ -4,46 +4,58 @@
  */
 
 import dataManager from './api.js';
+import { parseSummary } from './markdown-config.js';
 
 // 存储文章和分类数据
 let articles = [];
 let categories = [];
 
 /**
- * 渲染文章列表
- * 将文章数据渲染为卡片形式的HTML
- * 包含文章标题、摘要、分类、点赞数、评论数和发布日期
- * 
- * @param {Array} filteredArticles - 过滤后的文章列表数据
+ * 格式化日期
+ * @param {string} dateString - ISO格式的日期字符串
+ * @returns {string} 格式化后的日期字符串
  */
-function renderArticles(filteredArticles) {
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('zh-CN', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+}
+
+/**
+ * 渲染文章列表
+ * @param {Array} articles - 文章数据数组
+ */
+function renderArticles(articles) {
     const articlesList = document.getElementById('articlesList');
 
-    // 处理空数据状态
-    if (!filteredArticles.length) {
-        articlesList.innerHTML = `
-            <div class="empty-state">
-                <h3>暂无文章</h3>
-                <p>敬请期待...</p>
-            </div>
-        `;
+    if (!articles || articles.length === 0) {
+        articlesList.innerHTML = '<div class="no-articles">暂无文章</div>';
         return;
     }
 
-    // 渲染所有文章卡片
-    articlesList.innerHTML = filteredArticles.map(article => `
-        <div class="article-card" onclick="window.location.href='article.html?id=${article.id}'">
-            <h2>${article.title}</h2>
-            <p>${article.summary || ''}</p>
-            <div class="article-meta">
+    articlesList.innerHTML = articles.map(article => `
+        <article class="article-card" onclick="location.href='article.html?id=${article.id}'">
+            <div class="article-content">
                 <span class="category-tag">${article.category?.name || '未分类'}</span>
+                <h2>${article.title}</h2>
+                <div class="article-summary">${parseSummary(article.content)}</div>
+            </div>
+            <div class="article-meta">
                 <div class="meta-stats">
-                    <span><i>👍</i>${article.likes || 0}</span>
-                    <span><i>💬</i>${article.comments?.length || 0}</span>
-                    <span><i>📅</i>${article.formatted_date || new Date(article.date).toLocaleDateString()}</span>
+                    <span title="点赞数">👍 ${article.likes || 0}</span>
+                    <span title="评论数">💬 ${article.comments?.length || 0}</span>
+                    <span title="阅读数">👀 ${article.views || 0}</span>
+                </div>
+                <div class="meta-date">
+                    <span>${formatDate(article.date)}</span>
                 </div>
             </div>
-        </div>
+        </article>
     `).join('');
 
     // 为卡片添加渐入动画效果
@@ -87,7 +99,7 @@ function handleScroll() {
     const search = document.querySelector('.search');
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
 
-    // 控制搜索框的吸顶样式
+    // 控制搜��框的吸顶样式
     if (scrollTop > window.innerHeight * 0.5) {
         search.classList.add('scrolled');
     } else {

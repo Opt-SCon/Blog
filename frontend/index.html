@@ -4,58 +4,73 @@
 -->
 <!DOCTYPE html>
 <html lang="zh">
-  <head>
-    <meta charset="UTF-8" />
-    <!-- 响应式设计视口设置 -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>我的博客 - 简约而不简单</title>
-    <!-- 引入样式文件 -->
-    <link rel="stylesheet" href="assets/css/common.css" />
-    <!-- 公共样式 -->
-    <link rel="stylesheet" href="assets/css/index.css" />
-    <!-- 首页特定样式 -->
-  </head>
 
-  <body>
-    <!-- 顶部导航栏 -->
-    <nav class="nav">
-      <ul>
-        <li><a href="articles.html">文章</a></li>
-      </ul>
-    </nav>
+<head>
+  <meta charset="UTF-8" />
+  <!-- 响应式设计视口设置 -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>我的博客 - 简约而不简单</title>
+  <!-- markdown-it 相关样式 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github.css">
+  <!-- 引入样式文件 -->
+  <link rel="stylesheet" href="assets/css/common.css" />
+  <!-- 公共样式 -->
+  <link rel="stylesheet" href="assets/css/index.css" />
+  <!-- 首页特定样式 -->
+</head>
 
-    <!-- 首页大图展示区域 -->
-    <section class="hero">
-      <h1>探索、创造、分享</h1>
-      <p>记录生活，分享想法</p>
-      <!-- 滚动提示 -->
-      <div class="scroll-hint" id="scrollHint">
-        <span>向下滚动查看更多</span>
-        <div class="arrow"></div>
+<body>
+  <!-- 顶部导航栏 -->
+  <nav class="nav">
+    <ul>
+      <li><a href="articles.html">文章</a></li>
+    </ul>
+  </nav>
+
+  <!-- 首页大图展示区域 -->
+  <section class="hero">
+    <h1>探索、创造、分享</h1>
+    <p>记录生活，分享想法</p>
+    <!-- 滚动提示 -->
+    <div class="scroll-hint" id="scrollHint">
+      <span>向下滚动查看更多</span>
+      <div class="arrow"></div>
+    </div>
+  </section>
+
+  <!-- 文章搜索框 -->
+  <div class="search">
+    <input type="text" placeholder="搜索文章..." id="searchInput" />
+  </div>
+
+  <!-- 主要内容区域 -->
+  <div class="main-content">
+    <!-- 分类统计 -->
+    <aside class="sidebar">
+      <div class="category-stats">
+        <!-- 分类统计将通过 JavaScript 动态加载 -->
       </div>
+    </aside>
+
+    <!-- 文章列表容器 -->
+    <section class="articles" id="articlesList">
+      <!-- 文章将通过 JavaScript 动态加载 -->
     </section>
+  </div>
 
-    <!-- 文章搜索框 -->
-    <div class="search">
-      <input type="text" placeholder="搜索文章..." id="searchInput" />
-    </div>
+  <!-- markdown-it 相关依赖 -->
+  <script src="https://cdn.jsdelivr.net/npm/markdown-it@14.0.0/dist/markdown-it.min.js"></script>
+  <!-- KaTeX 主库必须在插件之前加载 -->
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <!-- 确保插件在主库加载后加载 -->
+  <script defer
+    src="https://cdn.jsdelivr.net/npm/markdown-it-toc-done-right@4.2.0/dist/markdown-it-toc-done-right.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/markdown-it-texmath@1.0.0/texmath.js"></script>
+  <script defer
+    src="https://cdn.jsdelivr.net/npm/markdown-it-highlightjs@4.0.1/dist/markdown-it-highlightjs.min.js"></script>
+  <!-- 引入首页脚本 -->
+  <script type="module" src="assets/js/index.js"></script>
+</body>
 
-    <!-- 主要内容区域 -->
-    <div class="main-content">
-      <!-- 分类统计 -->
-      <aside class="sidebar">
-        <div class="category-stats">
-          <!-- 分类统计将通过 JavaScript 动态加载 -->
-        </div>
-      </aside>
-
-      <!-- 文章列表容器 -->
-      <section class="articles" id="articlesList">
-        <!-- 文章将通过 JavaScript 动态加载 -->
-      </section>
-    </div>
-
-    <!-- 引入首页脚本 -->
-    <script type="module" src="assets/js/index.js"></script>
-  </body>
 </html>

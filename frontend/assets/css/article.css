@@ -72,22 +72,160 @@
 
 .article-content {
     line-height: 1.8;
-    color: #444;
+    color: #333;
+    margin-top: 2em;
+}
+
+/* Markdown 样式 */
+.article-content h1,
+.article-content h2,
+.article-content h3,
+.article-content h4,
+.article-content h5,
+.article-content h6 {
+    margin: 1.5em 0 0.5em;
+    font-weight: 600;
+    line-height: 1.25;
+}
+
+.article-content h1 { font-size: 2em; }
+.article-content h2 { font-size: 1.75em; }
+.article-content h3 { font-size: 1.5em; }
+.article-content h4 { font-size: 1.25em; }
+.article-content h5 { font-size: 1.1em; }
+.article-content h6 { font-size: 1em; }
+
+.article-content p {
+    margin: 1em 0;
+    line-height: 1.8;
+}
+
+.article-content a {
+    color: #0366d6;
+    text-decoration: none;
+}
+
+.article-content a:hover {
+    text-decoration: underline;
 }
 
 .article-content img {
     max-width: 100%;
     height: auto;
-    border-radius: 5px;
     margin: 1em 0;
+    border-radius: 4px;
+}
+
+.article-content blockquote {
+    margin: 1em 0;
+    padding: 0 1em;
+    color: #6a737d;
+    border-left: 0.25em solid #dfe2e5;
+}
+
+.article-content code {
+    padding: 0.2em 0.4em;
+    margin: 0;
+    font-size: 85%;
+    background-color: rgba(27,31,35,0.05);
+    border-radius: 3px;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
 }
 
 .article-content pre {
-    background: #f6f8fa;
-    padding: 1em;
-    border-radius: 5px;
-    overflow-x: auto;
     margin: 1em 0;
+    padding: 16px;
+    overflow: auto;
+    font-size: 85%;
+    line-height: 1.45;
+    background-color: #f6f8fa;
+    border-radius: 3px;
+}
+
+.article-content pre code {
+    padding: 0;
+    margin: 0;
+    background-color: transparent;
+}
+
+.article-content ul,
+.article-content ol {
+    margin: 1em 0;
+    padding-left: 2em;
+}
+
+.article-content li {
+    margin: 0.5em 0;
+}
+
+.article-content table {
+    width: 100%;
+    margin: 1em 0;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+.article-content table th,
+.article-content table td {
+    padding: 6px 13px;
+    border: 1px solid #dfe2e5;
+}
+
+.article-content table th {
+    font-weight: 600;
+    background-color: #f6f8fa;
+}
+
+/* 目录样式 */
+.toc-container {
+    margin: 2em 0;
+    padding: 1em;
+    background: #f8f9fa;
+    border-radius: 4px;
+    border: 1px solid #eaecef;
+}
+
+.toc-container .toc {
+    margin: 0;
+    padding: 0;
+}
+
+.toc-container .toc-list {
+    list-style-type: none;
+    padding-left: 1em;
+}
+
+.toc-container .toc-item {
+    margin: 0.5em 0;
+}
+
+.toc-container .toc-link {
+    color: #0366d6;
+    text-decoration: none;
+}
+
+.toc-container .toc-link:hover {
+    text-decoration: underline;
+}
+
+/* KaTeX 数学公式样式调整 */
+.katex-display {
+    margin: 1em 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+/* 评论中的 Markdown 样式 */
+.comment-content {
+    font-size: 0.95em;
+}
+
+.comment-content p {
+    margin: 0.5em 0;
+}
+
+.comment-content code {
+    font-size: 85%;
 }
 
 /* 评论区域样式 */

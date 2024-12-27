@@ -4,98 +4,116 @@
 -->
 <!DOCTYPE html>
 <html lang="zh">
-  <head>
-    <meta charset="UTF-8" />
-    <!-- 响应式设计视口设置 -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>文章详情</title>
-    <!-- 引入样式文件 -->
-    <link rel="stylesheet" href="assets/css/common.css" />
-    <!-- 公共样式 -->
-    <link rel="stylesheet" href="assets/css/article.css" />
-    <!-- 文章页特定样式 -->
-  </head>
-  <body>
-    <!-- 顶部导航栏 -->
-    <nav class="nav">
-      <ul>
-        <li><a href="index.html">首页</a></li>
-        <li><a href="articles.html">文章</a></li>
-      </ul>
-    </nav>
 
-    <!-- 在文章容器前添加加载指示器 -->
-    <div class="loading-spinner" id="loadingSpinner">
-      <div class="spinner"></div>
-      <span>加载中...</span>
-    </div>
+<head>
+  <meta charset="UTF-8" />
+  <!-- 响应式设计视口设置 -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>文章详情</title>
+  <!-- markdown-it 相关样式 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github.css">
+  <!-- 引入样式文件 -->
+  <link rel="stylesheet" href="assets/css/common.css" />
+  <!-- 公共样式 -->
+  <link rel="stylesheet" href="assets/css/article.css" />
+  <!-- 文章页特定样式 -->
+</head>
 
-    <!-- 文章页面主容器：采用左右布局 -->
-    <div class="article-container" id="articleContainer" style="display: none">
-      <!-- 左侧主要内容区 -->
-      <main class="article-main">
-        <!-- 文章内容区 -->
-        <article>
-          <h1 class="article-title" id="articleTitle"></h1>
-          <!-- 文章元信息：分类、日期、阅读量 -->
-          <div class="article-meta">
-            <span id="articleCategory"></span>
-            <span id="articleDate"></span>
-            <span id="articleViews">阅读 0</span>
-          </div>
-          <!-- 文章正文内容 -->
-          <div class="article-content" id="articleContent"></div>
-        </article>
+<body>
+  <!-- 顶部导航栏 -->
+  <nav class="nav">
+    <ul>
+      <li><a href="index.html">首页</a></li>
+      <li><a href="articles.html">文章</a></li>
+    </ul>
+  </nav>
 
-        <!-- 评论区域 -->
-        <section class="comments-section">
-          <h3>评论 <span id="commentCount">0</span></h3>
-          <!-- 评论表单 -->
-          <form class="comment-form" id="commentForm">
-            <textarea placeholder="写下你的评论..." required></textarea>
-            <button type="submit" class="btn btn-primary">发表评论</button>
-          </form>
-          <!-- 评论列表容器 -->
-          <div class="comment-list" id="commentList"></div>
-        </section>
-      </main>
+  <!-- 在文章容器前添加加载指示器 -->
+  <div class="loading-spinner" id="loadingSpinner">
+    <div class="spinner"></div>
+    <span>加载中...</span>
+  </div>
 
-      <!-- 右侧边栏 -->
-      <aside class="article-sidebar">
-        <!-- 文章信息卡片 -->
-        <div class="article-info">
-          <!-- 分类信息 -->
-          <div class="info-item">
-            <span class="info-label">分类</span>
-            <span class="category-tag" id="categoryTag"></span>
-          </div>
-          <!-- 发布时间 -->
-          <div class="info-item">
-            <span class="info-label">发布时间</span>
-            <span class="info-value" id="publishDate"></span>
-          </div>
-          <!-- 阅读数统计 -->
-          <div class="info-item">
-            <span class="info-label">阅读数</span>
-            <span class="info-value" id="viewCount">0</span>
-          </div>
-          <!-- 点赞按钮 -->
-          <button class="btn-like" id="likeBtn">
-            <span>👍</span>
-            <span id="likeCount">0</span>
-          </button>
+  <!-- 文章页面主容器：采用左右布局 -->
+  <div class="article-container" id="articleContainer" style="display: none">
+    <!-- 左侧主要内容区 -->
+    <main class="article-main">
+      <!-- 文章内容区 -->
+      <article>
+        <h1 class="article-title" id="articleTitle"></h1>
+        <!-- 文章元信息：分类、日期、阅读量 -->
+        <div class="article-meta">
+          <span id="articleCategory"></span>
+          <span id="articleDate"></span>
+          <span id="articleViews">阅读 0</span>
         </div>
+        <!-- 添加目录容器 -->
+        <div class="toc-container" id="toc"></div>
+        <!-- 文章正文内容 -->
+        <div class="article-content" id="articleContent"></div>
+      </article>
 
-        <!-- 文章操作按钮 -->
-        <div class="article-actions">
-          <button class="btn btn-back" onclick="window.history.back()">
-            返回
-          </button>
+      <!-- 评论区域 -->
+      <section class="comments-section">
+        <h3>评论 <span id="commentCount">0</span></h3>
+        <!-- 评论表单 -->
+        <form class="comment-form" id="commentForm">
+          <textarea placeholder="写下你的评论..." required></textarea>
+          <button type="submit" class="btn btn-primary">发表评论</button>
+        </form>
+        <!-- 评论列表容器 -->
+        <div class="comment-list" id="commentList"></div>
+      </section>
+    </main>
+
+    <!-- 右侧边栏 -->
+    <aside class="article-sidebar">
+      <!-- 文章信息卡片 -->
+      <div class="article-info">
+        <!-- 分类信息 -->
+        <div class="info-item">
+          <span class="info-label">分类</span>
+          <span class="category-tag" id="categoryTag"></span>
         </div>
-      </aside>
-    </div>
+        <!-- 发布时间 -->
+        <div class="info-item">
+          <span class="info-label">发布时间</span>
+          <span class="info-value" id="publishDate"></span>
+        </div>
+        <!-- 阅读数统计 -->
+        <div class="info-item">
+          <span class="info-label">阅读数</span>
+          <span class="info-value" id="viewCount">0</span>
+        </div>
+        <!-- 点赞按钮 -->
+        <button class="btn-like" id="likeBtn">
+          <span>👍</span>
+          <span id="likeCount">0</span>
+        </button>
+      </div>
 
-    <!-- 引入文章页面脚本 -->
-    <script type="module" src="assets/js/article.js"></script>
-  </body>
+      <!-- 文章操作按钮 -->
+      <div class="article-actions">
+        <button class="btn btn-back" onclick="window.history.back()">
+          返回
+        </button>
+      </div>
+    </aside>
+  </div>
+
+  <!-- markdown-it 相关依赖 -->
+  <script src="https://cdn.jsdelivr.net/npm/markdown-it@14.0.0/dist/markdown-it.min.js"></script>
+  <!-- KaTeX 主库必须在插件之前加载 -->
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <!-- 确保插件在主库加载后加载 -->
+  <script defer
+    src="https://cdn.jsdelivr.net/npm/markdown-it-toc-done-right@4.2.0/dist/markdown-it-toc-done-right.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/markdown-it-texmath@1.0.0/texmath.js"></script>
+  <script defer
+    src="https://cdn.jsdelivr.net/npm/markdown-it-highlightjs@4.0.1/dist/markdown-it-highlightjs.min.js"></script>
+  <!-- 引入文章页面脚本 -->
+  <script type="module" src="assets/js/article.js"></script>
+</body>
+
 </html>

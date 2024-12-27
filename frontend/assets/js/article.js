@@ -5,6 +5,7 @@
  */
 
 import dataManager from './api.js';
+import { parseArticle, parseContent } from './markdown-config.js';
 
 /**
  * 会话存储相关常量和全局变量
@@ -70,7 +71,7 @@ function renderArticle(article) {
 
     // 更新文章内容和元信息
     document.getElementById('articleTitle').textContent = article.title;
-    document.getElementById('articleContent').innerHTML = article.content;
+    document.getElementById('articleContent').innerHTML = parseArticle(article.content);
     document.getElementById('articleCategory').textContent = article.category?.name || '未分类';
     document.getElementById('articleDate').textContent = formatDate(article.date);
     document.getElementById('articleViews').textContent = `阅读 ${article.views || 0}`;
@@ -94,7 +95,7 @@ function renderComments(comments) {
     const commentList = document.getElementById('commentList');
     commentList.innerHTML = comments.map(comment => `
         <div class="comment-item">
-            <div class="comment-content">${comment.content}</div>
+            <div class="comment-content">${parseContent(comment.content)}</div>
             <div class="comment-meta">
                 <span>${formatDate(comment.date)}</span>
             </div>
@@ -137,7 +138,7 @@ async function init() {
             throw new Error('Article not found');
         }
 
-        // 记录文章访问历史
+        // 记录文章访问���史
         if (shouldIncrementViews) {
             markArticleAsViewed(articleId);
         }
